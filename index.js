@@ -30,7 +30,9 @@ module.exports = function(app) {
   plugin.uiSchema = {};
 
   plugin.start = function(options) {
-    app.emit('n2k-to-signalk', {});
+    app.emit('n2k-to-signalk', {
+      
+    });
   }
 
   plugin.stop = function() {
