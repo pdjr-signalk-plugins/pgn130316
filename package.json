@@ -1,7 +1,7 @@
 {
   "name": "pdjr-skplugin-pgn130316",
   "version": "1.0.0",
-  "description": "Map PGN130316 into Signal K",
+  "description": "Map PGN 130316 into Signal K",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

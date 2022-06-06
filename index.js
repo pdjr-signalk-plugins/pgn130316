@@ -15,8 +15,8 @@
  */
 
 const PLUGIN_ID = "pgn130316";
-const PLUGIN_NAME = "Map PGN130316 into Signal K";
-const PLUGIN_DESCRIPTION = "Map PGN130316 into Signal K";
+const PLUGIN_NAME = "PGN 130316";
+const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
 
 module.exports = function(app) {
   var plugin = {};
