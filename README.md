@@ -37,6 +37,7 @@ through 252).
 *value_name* is one of
 **actualTemperature** or
 **setTemperature**.
+These names conform to usage in the NMEA 2000 corrigendum note referred to above. 
 
 The actual data value of each key is a floating point temperature value
 in degrees Kelvin.
