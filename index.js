@@ -30,8 +30,41 @@ module.exports = function(app) {
   plugin.uiSchema = {};
 
   plugin.start = function(options) {
-    app.emit('n2k-to-signalk', {
-      
+    app.emitPropertyValue('pgn-to-signalk', {
+      130316: [
+        {
+          node: function(n2k) {
+            var source = n2k.fields['Source'];
+            var instance = n2k.fields['Instance'];
+            if (typeof source == 'string') {
+              source = source.replace(/ /g, '');
+              source = source[0].toLowerCase() + source.slice(1);
+            } else {
+              source = 'genericTemperature' + source;
+            }
+            return('sensors.temperature.' + source + '.' + instance + '.actualTemperature');
+          },
+          value: function(n2k) {
+            return(n2k.fields('Temperature'));
+          }
+        },
+        {
+          node: function(n2k) {
+            var source = n2k.fields['Source'];
+            var instance = n2k.fields['Instance'];
+            if (typeof source == 'string') {
+              source = source.replace(/ /g, '');
+              source = source[0].toLowerCase() + source.slice(1);
+            } else {
+              source = 'genericTemperature' + source;
+            }
+            return('sensors.temperature.' + source + '.' + instance + '.setTemperature');
+          },
+          value: function(n2k) {
+            return(n2k.fields('Set Temperature'));
+          }          
+        }
+      ]
     });
   }
 
