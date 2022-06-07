@@ -40,7 +40,7 @@ module.exports = function(app) {
               source = source.replace(/ /g, '');
               source = source[0].toLowerCase() + source.slice(1);
             } else {
-              source = 'genericTemperature' + source;
+              source = 'undefined' + source;
             }
             return('sensors.temperature.' + source + '.' + instance + '.actualTemperature');
           },
@@ -56,7 +56,7 @@ module.exports = function(app) {
               source = source.replace(/ /g, '');
               source = source[0].toLowerCase() + source.slice(1);
             } else {
-              source = 'genericTemperature' + source;
+              source = 'undefined' + source;
             }
             return('sensors.temperature.' + source + '.' + instance + '.setTemperature');
           },

@@ -12,8 +12,9 @@ The plugin builds data paths (keys) of the form:
 
 Where:
 
-*temperature_source* derives from the PGN *temperature source* byte field and is
-one of the NMEA assigned values
+*temperature_source* derives almost directly from the 'Source'
+property value returned by ```canboatjs```.
+For NMEA defined sources this will result be one of
 **seaTemperature**,
 **outsideTemperature**,
 **insideTemperature**,
@@ -28,14 +29,11 @@ one of the NMEA assigned values
 **theoreticalWindChillTemperature**,
 **heatIndexTemperature**,
 **freezerTemperature**,
-**exhaustGasTemperature**
-or **undefined** (when *temperature source* is an unassigned value less
-than 129 - i.e. falls in the NMEA reserved range)
-or **genericTemperatureSource*nnn*** (when *temperature source* is a
-value in the NMEA user-allocated range 129 through 252).
+**exhaustGasTemperature**.
 
-*temperature_instance* derives from the PGN *temperature instance* byte
-field and is an integer number in the range 0 through 252.
+*temperature_instance* derives directly from the 'Instance' property
+value returned by ```canboatjs``` and will typically be an integer in
+the range 0 through 252.
 
 *value_name* is one of
 **actualTemperature** or
