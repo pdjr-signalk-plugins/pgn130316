@@ -45,7 +45,7 @@ module.exports = function(app) {
             return('sensors.temperature.' + source + '.' + instance + '.actualTemperature');
           },
           value: function(n2k) {
-            return(n2k.fields('Temperature'));
+            return(n2k.fields['Temperature']);
           }
         },
         {
@@ -61,7 +61,7 @@ module.exports = function(app) {
             return('sensors.temperature.' + source + '.' + instance + '.setTemperature');
           },
           value: function(n2k) {
-            return(n2k.fields('Set Temperature'));
+            return(n2k.fields['Set Temperature']);
           }          
         }
       ]
