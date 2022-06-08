@@ -43,7 +43,7 @@ the range 0 through 252.
 corrigendum referred to above.
 
 The data value of each key is exactly that value returned by
-```canboatjs``` (i.e. a floating point number expressing temperature in
+```canboatjs``` - i.e. a floating point number expressing temperature in
 degrees Kelvin.
 
 Paul Reeve <*preeve_at_pdjr.eu*>
