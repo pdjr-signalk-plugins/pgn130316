@@ -3,8 +3,8 @@
 Map PGN 130316 into Signal K.
 
 **pdjr-skplugin-pgn130316** extends Signal K's support for NMEA 2000
-[PGN 130316 Temperature, Extended Range](https://www.nmea.org/Assets/nmea%202000%20pgn%20130316%20corrigenda%20nmd%20version%202.100%20feb%202015.pdf)
-by injecting data received over this PGN into the Signal K data store.
+PGN 130316 Temperature, Extended Range by injecting data received over
+this PGN into the Signal K data store.
 
 The plugin assumes its input is derived from Signal K's default parser
 [canboatjs](https://github.com/canboat/canboatjs).
