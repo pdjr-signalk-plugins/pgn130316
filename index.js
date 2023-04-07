@@ -73,4 +73,3 @@ module.exports = function(app) {
   
   return(plugin);
 }
-
