@@ -7,7 +7,7 @@ adding support for PGN 130316 Temperature, Extended Range.
 
 The plugin takes parsed data derived from
 [canboatjs](https://github.com/canboat/canboatjs)
-and interpolates this into the Signal K data tree as key/path names of
+and interpolates this into the Signal K data tree as key names of
 the form:
 
 **sensors**.**temperature**.*temperature_source*.*temperature_instance*.*value_name*
@@ -37,13 +37,14 @@ defined by the Signal K specification:
 returned by ```canboatjs``` and will normally be an integer in
 the range 0 through 252.
 
-*value_name* is one of data value names defined in the NMEA 2000
-specification: 
+*value_name* is one of the data value names defined in the NMEA 2000
+specification, either
 **actualTemperature** or
 **setTemperature**.
+Typically, each temperature sensor reporting on the host system
+will report both properties.
 
-The data value of each key is exactly that value returned by
-```canboatjs``` - i.e. a floating point number expressing a temperature
-in degrees Kelvin.
+The data value of each key is the floating point number returned by
+```canboatjs``` expressing a temperature in degrees Kelvin.
 
 Paul Reeve <*preeve_at_pdjr.eu*>
