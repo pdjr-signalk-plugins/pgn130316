@@ -41,8 +41,8 @@ the range 0 through 252.
 specification, either
 **actualTemperature** or
 **setTemperature**.
-Typically, each temperature sensor reporting on the host system
-will report both properties.
+Typically, a temperature sensor on the host system will report both
+properties.
 
 The data value of each key is the floating point number returned by
 ```canboatjs``` expressing a temperature in degrees Kelvin.
