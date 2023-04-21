@@ -25,7 +25,25 @@ module.exports = function(app) {
   plugin.name = PLUGIN_NAME;
   plugin.description = PLUGIN_DESCRIPTION;
 
-  plugin.schema = {};
+  plugin.schema = {
+    type: "object",
+    properties : {
+      root: {
+        type: "string",
+        title: "Root in the data store where keys should be placed",
+        default: "sensors.temperature"
+      },
+      actualtemperature_keyname: {
+        type: "string",
+        title: "Name for the final element of the key",
+        default: "actualTemperature"
+      },
+      settemperature_metaname: {
+        type: "string",
+        title: "Name for the meta property holding the temperature set point"
+      }
+    }
+  };
 
   plugin.uiSchema = {};
 
@@ -42,27 +60,18 @@ module.exports = function(app) {
             } else {
               source = 'undefined' + source;
             }
-            return('sensors.temperature.' + source + '.' + instance + '.actualTemperature');
+            return(options.root + '.' + source + '.' + instance + options.actualtemperature_keyname);
           },
           value: function(n2k) {
             return(n2k.fields['Temperature']);
-          }
-        },
-        {
-          node: function(n2k) {
-            var source = n2k.fields['Source'];
-            var instance = n2k.fields['Instance'];
-            if (typeof source == 'string') {
-              source = source.replace(/ /g, '');
-              source = source[0].toLowerCase() + source.slice(1);
-            } else {
-              source = 'undefined' + source;
-            }
-            return('sensors.temperature.' + source + '.' + instance + '.setTemperature');
           },
-          value: function(n2k) {
-            return(n2k.fields['Set Temperature']);
-          }          
+          meta: function(n2k) {
+            var retval = {}; 
+            retval["units"] = "K";
+            retval["description"] = "Actual sensor temperature";
+            retval[options.settemperature_metaname] = n2k.fields['Set Temperature']; 
+            return(retval);
+          }
         }
       ]
     });
