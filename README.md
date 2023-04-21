@@ -5,19 +5,30 @@ Map PGN 130316 into Signal K.
 **pdjr-skplugin-pgn130316** extends Signal K's NMEA 2000 interface by
 adding support for PGN 130316 Temperature, Extended Range.
 
-Signal K's [canboatjs](https://github.com/canboat/canboatjs) component
-is already able to parse PGN 130316 messages and **pdjr-skplugin-pgn130316**
-interpolates this parsed data into Signal K as key/value pairs where
-each key has the form:
+Early versions of Signal K are able to parse received PGN 130316
+messages, but lack the ability to interpolate the resulting data
+into the Signal K data model.
+**pdjr-skplugin-pgn130316** addresses this lacuna by generating
+key/value pairs from received PGN 130316 messages.
 
-*root*.*source*.*instance*.*name*
+PGN 130316 compliant temperature sensors report two data values:
+the actual temperature sensed by the device and a set-point
+temperature configured by the installer or user.
+Each temperature sensor is represented in Signal K by a pair of
+keys of the form:
+
+```
+*root*.*source*.*instance*.*actual-temperature*
+*root*.*source*.*instance*.*set-temperature*
+```
+
+where:
 
 *root* defaults to 'temperature.sensors' but this value can be changed
 in the plugin configuration file. 
 
-*source* derives from the 'Source' property value returned by
-```canboatjs``` and will normally be one of the following values
-defined by the Signal K specification:
+*source* will normally be one of the following values defined by the
+Signal K specification:
 **seaTemperature**,
 **outsideTemperature**,
 **insideTemperature**,
@@ -34,21 +45,16 @@ defined by the Signal K specification:
 **freezerTemperature**,
 **exhaustGasTemperature**.
 
-*instance* derives from the 'Instance' property value returned by
-```canboatjs``` and will normally be an integer in the range 0 through
-252.
+*instance* will normally be an integer in the range 0 through 252.
 
-*name* derives from ```canboatjs``` and by default will be one
-of either
-**actualTemperature** or
-**setTemperature**.
-Typically, a temperature sensor on the host system will report both
-properties.
-The actual values used for *name* can be overridden in the plugin
-configuration.
+*actual-temperature* defaults to 'actualTemperature' buth this value
+can be changed in the plugin configuration file.
 
-The data value of each key is the floating point number returned by
-```canboatjs``` expressing a temperature in degrees Kelvin.
+*set-temperature* defaults to 'setTemperature' buth this value
+can be changed in the plugin configuration file.
+
+The data value of each key is a floating point number expressing a
+temperature in degrees Kelvin.
 
 ## Plugin configuration
 
@@ -58,8 +64,8 @@ The default plugin configuration has the following form:
   "enabled": true,
   "configuration: {
     "root": "temperature.sensors",
-    "actual": "actualTemperature",
-    "set": "setTemperature"
+    "actual-temperature": "actualTemperature",
+    "set-temperature": "setTemperature"
   }
 }
 ```
