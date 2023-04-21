@@ -5,11 +5,11 @@ Map PGN 130316 into Signal K.
 **pdjr-skplugin-pgn130316** extends Signal K's NMEA 2000 interface by
 adding support for PGN 130316 Temperature, Extended Range.
 
-Early versions of Signal K are able to parse received PGN 130316
-messages, but lack the ability to interpolate the resulting data
-into the Signal K data model.
-**pdjr-skplugin-pgn130316** addresses this lacuna by generating
-key/value pairs from received PGN 130316 messages.
+Versions of Signal K which use [canboatjs]() are able to parse
+PGN 130316 messages, but lack the ability to interpolate the
+derived data into the Signal K data model.
+**pdjr-skplugin-pgn130316** addresses this issue by generating
+key/value pairs from parsed PGN 130316 messages.
 
 PGN 130316 compliant temperature sensors report two data values:
 the actual temperature sensed by the device and a set-point
