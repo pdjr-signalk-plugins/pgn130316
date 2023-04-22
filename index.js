@@ -14,6 +14,9 @@
  * permissions and limitations under the License.
  */
 
+const temperatureMappings = require('../temperatureMappings');
+const { chooseField } = require('../utils.js');
+
 const PLUGIN_ID = "pgn130316";
 const PLUGIN_NAME = "pdjr-skplugin-pgn130316";
 const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
@@ -29,21 +32,40 @@ module.exports = function(app) {
     type: 'object',
     required: [ 'root', 'keyname', 'metaname' ],
     properties: {
-      root: {
-        type: 'string',
+      temperatureMapping: {
+        type: 'array',
+        properties: {
+          key : {
+            type: 'string'
+          },
+          path : {
+            type: 'string',
+          }
+        }
         title: 'Root in the data store where keys should be placed',
         default: 'sensors.temperature'
-      },
-      keyname: {
-        type: 'string',
-        title: 'Name for the final element of the key',
-        default: 'temperature'
-      },
-      metaname: {
-        type: 'string',
-        title: 'Name for the meta property holding the temperature set point',
-        default: 'setTemperature'
       }
+    },
+    default: {
+      temperatureMapping: [
+        { key: '*', path: 'sensors.temperature.<index>' },
+        { key: 'Sea Temperature', path: 'environment.water.<index>' },
+        { key: 'Outside Temperature', path: 'environment.outside.<index>' },
+        { key: 'Inside Temperature', path: 'environment.inside.<index>' },
+        { key: 'Engine Room Temperature', path: 'environment.inside.engineRoom.<index>' },
+        { key: 'Main Cabin Temperature', path: 'environment.inside.mainCabin.<index>' },
+        { key: 'Live Well Temperature', path: 'tanks.liveWell.<index>' },
+        { key: 'Bait Well Temperature', path: 'tanks.baitWell.<index>' },
+        { key: 'Refrigeration Temperature', path: 'environment.inside.refrigerator.<index>' },
+        { key: 'Refridgeration Temperature', path: 'environment.inside.refrigerator.<index>' },
+        { key: 'Heating System Temperature', path: 'environment.inside.heating.<index>' },
+        { key: 'Dew Point Temperature', path: 'environment.outside.dewPoint.<index>' },
+        { key: 'Apparent Wind Chill Temperature', path: 'environment.outside.apparentWindChill.<index>' },
+        { key: 'Theoretical Wind Chill Temperature', path: 'environment.outside.theoreticalWindChill.<index>' },
+        { key: 'Heat Index Temperature', path: 'environment.outside.heatIndex.<index>' },
+        { key: 'Freezer Temperature', path: 'environment.inside.freezer.<index>' },
+        { key: 'Exhaust Gas Temperature', path: 'propulsion.exhaust.<index> }'
+      ]
     }
   };
 
@@ -51,40 +73,46 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
 
-    options.root = options.root.replace(/ /g, '');
-    options.keyname = options.keyname.replace(/ /g, '');
-    options.metaname = options.metaname.replace(/ /g, '');
-
     app.emitPropertyValue('pgn-to-signalk', {
       130316: [
         {
           node: function(n2k) {
-            var source = n2k.fields['Source'];
-            var instance = n2k.fields['Instance'];
-            if (typeof source == 'string') {
-              source = source.replace(/ /g, '');
-              source = source[0].toLowerCase() + source.slice(1);
+            var path = getPath(options.temperatureMapping, n2k.fields['Source'], n2k.fields['Instance']);
+            if (path) {
+              path = path + '.' + 'temperature';
             } else {
-              source = 'undefined' + source;
+              debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
+              return;
             }
-            return(options.root + '.' + source + '.' + instance + options.keyname);
+            return(path);
           },
-          value: function(n2k) {
-            return(n2k.fields['Temperature']);
+          value: n2k.fields['Temperature']
+        },
+        {
+          node: function(n2k) {
+            var path = getPath(options.temperatureMapping, n2k.fields['Source'], n2k.fields['Instance']);
+            if (path) {
+              path = path + '.' + 'setTemperature';
+            } else {
+              debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
+              return;
+            }
+            return(path);
           },
-          meta: function(n2k) {
-            var retval = {}; 
-            retval["units"] = "K";
-            retval["description"] = "Actual sensor temperature";
-            retval[options.metaname] = n2k.fields['Set Temperature']; 
-            return(retval);
-          }
+          value: n2k.fields['Set Temperature']
         }
       ]
     });
   }
 
   plugin.stop = function() {
+  }
+
+  function getPath(mapping, key, index) {
+    var retval = undefined;
+    mapping.forEach(map => { if (key.match(map.key)) { retval = map.path; break; } });
+    if (retval) retval = retval.replace('<index>', index);
+    return(retval);
   }
   
   return(plugin);

@@ -3,57 +3,82 @@
 Map PGN 130316 into Signal K.
 
 **pdjr-skplugin-pgn130316** extends Signal K's NMEA 2000 interface by
-adding support for PGN 130316 Temperature, Extended Range.
+adding enhanced support for PGN 130316 Temperature, Extended Range.
 
-Versions of Signal K which use [canboatjs]() are able to parse
-PGN 130316 messages, but lack the ability to interpolate the
-derived data into the Signal K data model.
-**pdjr-skplugin-pgn130316** addresses this issue by generating
-key/value pairs from parsed PGN 130316 messages.
+## Background
 
-PGN 130316 compliant temperature sensors report two temperatures:
-a dynamic value representing the actual temperature sensed by the
-device and a static value reporting a set-point temperature
-configured by the installer or user.
-A temperature sensor is represented in the Signal K store by a key
-of the form:
+Versions of Signal K release before March 2022 lack the ability to
+interpolate PGN 130316.
 
-*root*.*source*.*instance*.*actual-temperature*
+Later versions implement an incomplete interpolation mechanism with
+the following characteristics:
 
-where:
+1. Temperature readings are inserted into the Signal K store at
+   locations derived by mapping PGN 130316 ```Temperature Source```
+   into a path using 
+   [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
+   statically defined mapping.
+   The resulting disposition of keys across the Signal K store may not
+   be to everyone's taste.
 
-*root* defaults to 'temperature.sensors'. 
+2. PGN 130316 ```Temperature Source``` data is not explicitly saved in
+   the store (although it can be intuited by reversing the mapping
+   described above).
+   
+3. PGN 130316 ```Set Temperature``` data is not made available in
+   Signal K.
 
-*source* derives from a received PGN 130316 message and will normally
-be one of the following values defined by the Signal K specification:
-**seaTemperature**,
-**outsideTemperature**,
-**insideTemperature**,
-**engineRoomTemperature**,
-**mainCabinTemperature**,
-**liveWellTemperature**,
-**baitWellTemperature**,
-**refrigerationTemperature**,
-**heatingSystemTemperature**,
-**dewPointTemperature**,
-**apparentWindChillTemperature**,
-**theoreticalWindChillTemperature**,
-**heatIndexTemperature**,
-**freezerTemperature**,
-**exhaustGasTemperature**.
+**pdjr-skplugin-pgn130316** provides a more flexible and comprehensive
+mechanism for the handling PGN 130316 with the following characteristics.
 
-*instance* derives from a received PGN 130316 message and will normally
-be an integer in the range 0 through 252.
+1. Temperature readings are mapped into the Signal K store using
+   a user-configurable mapping from PGN 130316 ```Temperature Source```
+   into a Signal K path.
 
-*actual-temperature* defaults to 'temperature'.
+2. ```Temperature Source``` data is explicitly saved in the store as
+   part of the data value description.  
 
-The plugin inserts `unit` and `description` properties into the meta
-value associated with each generated key and an additional property
-called (by default) `setTemperature` which has as its value the
-set temperature derived from PGN 130316.
+3. ```Set Temperature``` data is interpolated into the tree as an
+   additional 'setTemperature' key value alongside the actual
+   temperature reading.
 
-The defaults used to compose key and meta names can be changed in the
-plugin configuration.
+## Description
+
+**pdjr-skplugin-pgn130316** interpolates PGN 130316 messages received
+from a sensor by:
+
+* creating a key in the Signal K store for the sensor's reported actual
+  temperature.
+  The key path is derived from the sensor's reported temperature source
+  through the mapping defined in the plugin configuration.
+  The terminal component of the key name is 'temperature'.
+
+* creating a key in the Signal K store for the sensor's reported set
+  temperature.
+  The key path is derived from the sensor's reported temperature source
+  through the mapping defined in the plugin configuration.
+  The terminal component of the key name is 'setTemperature'
+
+* setting the key description property to the sensor's reported
+  source type name which will be one of
+  **Sea Temperature**,
+  **Outside Temperature**,
+  **Inside Temperature**,
+  **Engine Room Temperature**,
+  **Main Cabin Temperature**,
+  **Live Well Temperature**,
+  **Bait Well Temperature**,
+  **Refrigeration Temperature**,
+  **Heating System Temperature**,
+  **Dew Point Temperature**,
+  **Apparent Wind Chill Temperature**,
+  **Theoretical Wind Chill Temperature**,
+  **Heat Index Temperature**,
+  **Freezer Temperature**,
+  **Exhaust Gas Temperature**.
+
+* Inserting `unit` and `description` properties into the meta
+  data associated with each generated key.
 
 ## Plugin configuration
 
@@ -61,7 +86,7 @@ The default plugin configuration has the following form:
 ```
 {
   "enabled": true,
-  "configuration: {
+  ": {
     "root": "temperature.sensors",
     "keyname": "temperature",
     "metaname": "setTemperature"
