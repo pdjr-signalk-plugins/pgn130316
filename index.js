@@ -26,21 +26,23 @@ module.exports = function(app) {
   plugin.description = PLUGIN_DESCRIPTION;
 
   plugin.schema = {
-    type: "object",
-    properties : {
+    type: 'object',
+    required: [ 'root', 'keyname', 'metaname' ],
+    properties: {
       root: {
-        type: "string",
-        title: "Root in the data store where keys should be placed",
-        default: "sensors.temperature"
+        type: 'string',
+        title: 'Root in the data store where keys should be placed',
+        default: 'sensors.temperature'
       },
-      actualtemperature_keyname: {
-        type: "string",
-        title: "Name for the final element of the key",
-        default: "actualTemperature"
+      keyname: {
+        type: 'string',
+        title: 'Name for the final element of the key',
+        default: 'temperature'
       },
-      settemperature_metaname: {
-        type: "string",
-        title: "Name for the meta property holding the temperature set point"
+      metaname: {
+        type: 'string',
+        title: 'Name for the meta property holding the temperature set point',
+        default: 'setTemperature'
       }
     }
   };
@@ -48,6 +50,11 @@ module.exports = function(app) {
   plugin.uiSchema = {};
 
   plugin.start = function(options) {
+
+    options.root = options.root.replace(/ /g, '');
+    options.keyname = options.keyname.replace(/ /g, '');
+    options.metaname = options.metaname.replace(/ /g, '');
+
     app.emitPropertyValue('pgn-to-signalk', {
       130316: [
         {
@@ -60,7 +67,7 @@ module.exports = function(app) {
             } else {
               source = 'undefined' + source;
             }
-            return(options.root + '.' + source + '.' + instance + options.actualtemperature_keyname);
+            return(options.root + '.' + source + '.' + instance + options.keyname);
           },
           value: function(n2k) {
             return(n2k.fields['Temperature']);
@@ -69,7 +76,7 @@ module.exports = function(app) {
             var retval = {}; 
             retval["units"] = "K";
             retval["description"] = "Actual sensor temperature";
-            retval[options.settemperature_metaname] = n2k.fields['Set Temperature']; 
+            retval[options.metaname] = n2k.fields['Set Temperature']; 
             return(retval);
           }
         }
