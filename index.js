@@ -60,7 +60,8 @@ module.exports = function(app) {
         { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
         { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
         { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
-        { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" }
+        { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
+        { "key": ".*", "path": "sensors.temperature.fallback.<index>" }
       ]
     }
   };
