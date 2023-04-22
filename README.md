@@ -22,8 +22,7 @@ of the form:
 
 where:
 
-*root* defaults to 'temperature.sensors' but can be changed in the
-plugin configuration file. 
+*root* defaults to 'temperature.sensors'. 
 
 *source* derives from a received PGN 130316 message and will normally
 be one of the following values defined by the Signal K specification:
@@ -46,14 +45,14 @@ be one of the following values defined by the Signal K specification:
 *instance* derives from a received PGN 130316 message and will normally
 be an integer in the range 0 through 252.
 
-*actual-temperature* defaults to 'actualTemperature' but can be changed
-in the plugin configuration file.
+*actual-temperature* defaults to 'temperature'.
 
 The plugin inserts `unit` and `description` properties into the meta
 value associated with each generated key and an additional property
-called (by default) 'setTemperature' which has as its value the
+called (by default) `setTemperature` which has as its value the
 set temperature derived from PGN 130316.
-The name of the set temperature property can be changed in the
+
+The defaults used to compose key and meta names can be changed in the
 plugin configuration.
 
 ## Plugin configuration
