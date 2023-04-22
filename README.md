@@ -18,9 +18,7 @@ configured by the installer or user.
 A temperature sensor is represented in the Signal K store by a key
 of the form:
 
-```
 *root*.*source*.*instance*.*actual-temperature*
-```
 
 where:
 
