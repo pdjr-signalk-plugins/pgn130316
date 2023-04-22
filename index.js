@@ -44,10 +44,7 @@ module.exports = function(app) {
           }
         }
       }
-    },
-    "default": {
-      "temperatureMapping": [
-        { "key": ".*", "path": "sensors.temperature.<index>" },
+      "default": [
         { "key": "Sea Temperature", "path": "environment.water.<index>" },
         { "key": "Outside Temperature", "path": "environment.outside.<index>" },
         { "key": "Inside Temperature", "path": "environment.inside.<index>" },
@@ -57,7 +54,7 @@ module.exports = function(app) {
         { "key": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
         { "key": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
         { "key": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-        { "key": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
+        { "key": "Heating System Temperature", "path": "sensors.temperature.heating.<index>" },
         { "key": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
         { "key": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
         { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
@@ -77,12 +74,7 @@ module.exports = function(app) {
         {
           node: function(n2k) {
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
-            if (path) {
-              path = path + '.' + 'temperature';
-            } else {
-              app.debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
-              return;
-            }
+            if (path) path = path + '.' + 'temperature';
             return(path);
           },
           value: function(n2k) {
@@ -92,12 +84,7 @@ module.exports = function(app) {
         {
           node: function(n2k) {
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
-            if (path) {
-              path = path + '.' + 'setTemperature';
-            } else {
-              debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
-              return;
-            }
+            if (path) path = path + '.' + 'setTemperature';
             return(path);
           },
           value: function(n2k) {
