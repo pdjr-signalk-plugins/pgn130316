@@ -50,7 +50,7 @@ be an integer in the range 0 through 252.
 in the plugin configuration file.
 
 The plugin inserts `unit` and `description` properties into the meta
-value associated with each generated key and am additional property
+value associated with each generated key and an additional property
 called (by default) 'setTemperature' which has as its value the
 set temperature derived from PGN 130316.
 The name of the set temperature property can be changed in the
