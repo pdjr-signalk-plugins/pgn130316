@@ -34,16 +34,17 @@ module.exports = function(app) {
     properties: {
       temperatureMapping: {
         type: 'array',
-        properties: {
-          key : {
-            type: 'string'
-          },
-          path : {
-            type: 'string',
+        items: {
+          type: 'object',
+          properties: {
+            key : {
+              type: 'string'
+            },
+            path : {
+              type: 'string'
+            }
           }
         }
-        title: 'Root in the data store where keys should be placed',
-        default: 'sensors.temperature'
       }
     },
     default: {
