@@ -14,9 +14,6 @@
  * permissions and limitations under the License.
  */
 
-const temperatureMappings = require('../temperatureMappings');
-const { chooseField } = require('../utils.js');
-
 const PLUGIN_ID = "pgn130316";
 const PLUGIN_NAME = "pdjr-skplugin-pgn130316";
 const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
@@ -29,43 +26,44 @@ module.exports = function(app) {
   plugin.description = PLUGIN_DESCRIPTION;
 
   plugin.schema = {
-    type: 'object',
-    required: [ 'root', 'keyname', 'metaname' ],
-    properties: {
-      temperatureMapping: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            key : {
-              type: 'string'
+    "title": "Configuration for pdjr-skplugin-pgn130316",
+    "type": "object",
+    "required": [ "temperatureMapping" ],
+    "properties": {
+      "temperatureMapping": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "key" : {
+              "type": "string"
             },
-            path : {
-              type: 'string'
+            "path" : {
+              "type": "string"
             }
           }
         }
       }
     },
-    default: {
-      temperatureMapping: [
-        { key: '*', path: 'sensors.temperature.<index>' },
-        { key: 'Sea Temperature', path: 'environment.water.<index>' },
-        { key: 'Outside Temperature', path: 'environment.outside.<index>' },
-        { key: 'Inside Temperature', path: 'environment.inside.<index>' },
-        { key: 'Engine Room Temperature', path: 'environment.inside.engineRoom.<index>' },
-        { key: 'Main Cabin Temperature', path: 'environment.inside.mainCabin.<index>' },
-        { key: 'Live Well Temperature', path: 'tanks.liveWell.<index>' },
-        { key: 'Bait Well Temperature', path: 'tanks.baitWell.<index>' },
-        { key: 'Refrigeration Temperature', path: 'environment.inside.refrigerator.<index>' },
-        { key: 'Refridgeration Temperature', path: 'environment.inside.refrigerator.<index>' },
-        { key: 'Heating System Temperature', path: 'environment.inside.heating.<index>' },
-        { key: 'Dew Point Temperature', path: 'environment.outside.dewPoint.<index>' },
-        { key: 'Apparent Wind Chill Temperature', path: 'environment.outside.apparentWindChill.<index>' },
-        { key: 'Theoretical Wind Chill Temperature', path: 'environment.outside.theoreticalWindChill.<index>' },
-        { key: 'Heat Index Temperature', path: 'environment.outside.heatIndex.<index>' },
-        { key: 'Freezer Temperature', path: 'environment.inside.freezer.<index>' },
-        { key: 'Exhaust Gas Temperature', path: 'propulsion.exhaust.<index> }'
+    "default": {
+      "temperatureMapping": [
+        { "key": ".*", "path": "sensors.temperature.<index>" },
+        { "key": "Sea Temperature", "path": "environment.water.<index>" },
+        { "key": "Outside Temperature", "path": "environment.outside.<index>" },
+        { "key": "Inside Temperature", "path": "environment.inside.<index>" },
+        { "key": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
+        { "key": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
+        { "key": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
+        { "key": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
+        { "key": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+        { "key": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+        { "key": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
+        { "key": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
+        { "key": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
+        { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
+        { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
+        { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
+        { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" }
       ]
     }
   };
@@ -78,20 +76,22 @@ module.exports = function(app) {
       130316: [
         {
           node: function(n2k) {
-            var path = getPath(options.temperatureMapping, n2k.fields['Source'], n2k.fields['Instance']);
+            var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
             if (path) {
               path = path + '.' + 'temperature';
             } else {
-              debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
+              app.debug('Error mapping path for source = ' + n2k.fields['Source'] + ', index = ' + n2k.fields['Instance']);
               return;
             }
             return(path);
           },
-          value: n2k.fields['Temperature']
+          value: function(n2k) {
+            return(n2k.fields['Temperature']);
+          }
         },
         {
           node: function(n2k) {
-            var path = getPath(options.temperatureMapping, n2k.fields['Source'], n2k.fields['Instance']);
+            var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
             if (path) {
               path = path + '.' + 'setTemperature';
             } else {
@@ -100,7 +100,9 @@ module.exports = function(app) {
             }
             return(path);
           },
-          value: n2k.fields['Set Temperature']
+          value: function(n2k) {
+            return(n2k.fields['Set Temperature']);
+          }
         }
       ]
     });
@@ -111,7 +113,9 @@ module.exports = function(app) {
 
   function getPath(mapping, key, index) {
     var retval = undefined;
-    mapping.forEach(map => { if (key.match(map.key)) { retval = map.path; break; } });
+    mapping.forEach(map => {
+      if ((key.match(map.key)) && (!retval)) retval = map.path;
+    });
     if (retval) retval = retval.replace('<index>', index);
     return(retval);
   }
