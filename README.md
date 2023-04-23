@@ -100,8 +100,8 @@ node ```path```.
 When a PGN 130316 message arrives, the value of the PGN's ```Source```
 field is tested against each ```source``` value in turn until a match
 is made and the corresponding ```source``` path selected.
-If the selected ```path``` contains either of the tokens '\<source\>' or
-'\<index\>' then these will be replaced respectively by the PGN's
+If the selected ```path``` contains either of the tokens '\<source\>'
+or '\<index\>' then these will be replaced respectively by the PGN's
 ```Source``` and ```Index``` field values. 
 
 The PGN ```Source``` field is an integer value in the range 0 through
