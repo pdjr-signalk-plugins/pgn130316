@@ -120,7 +120,7 @@ logical inconsistencies especially by acknowledging that *all* PGN
 130316 messages will include an ```Index``` field value.
 
 The last two maps in the example configuration shown above illustrate
-how to catch a specif numeric ```Source``` value and how to provide
+how to catch a specific numeric ```Source``` value and how to provide
 a catch-all.
 
 ## Author
