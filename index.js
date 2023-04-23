@@ -102,7 +102,7 @@ module.exports = function(app) {
   function getPath(mapping, source, index) {
     var retval = undefined;
     var found = mapping.find((s,p) => source.match(s));
-    if (found) retval = found.path.replace('<source>', source).replace('<index>', index);
+    if (found) retval = (found.path.replace('<source>', source)).replace('<index>', index);
     return(retval);
   }
   
