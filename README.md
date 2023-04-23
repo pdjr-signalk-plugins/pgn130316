@@ -104,18 +104,18 @@ If the selected ```path``` contains either of the tokens '\<source\>'
 or '\<index\>' then these will be replaced respectively by the PGN's
 ```Source``` and ```Index``` field values. 
 
-The PGN ```Source``` field is an integer value in the range 0 through
-254 with the meaning of codes 0 through 15 defined in the NMEA 2000
-specification.
-Signal K's canboat parser converts these sixteen numeric codes into
-their semantic equivalents leaving un-defined values as the raw numeric
-code.
+The PGN 130316  ```Source``` field is an integer value in the range 0
+through 254.
+Source values in the range 0 through 15 have semantics defined in the
+NMEA 2000 specification and Signal K's canboat parser converts these
+numeric codes into their named equivalents.
+Source values outside the range 0 through 15 remain numeric.
 
 The emergence of PGN 130316 in NMEA 2000 compromised both the semantics
 of temperature source codes and Signal K's mapping of codes into node
 paths.
-The default configuration file supplied with the plugin implements to
-preserve the legacy Signal K path allocations with some corrections for
+The default configuration file supplied with the plugin preserves as far
+as possible the legacy Signal K path allocations with some corrections for
 logical inconsistencies especially by acknowledging that *all* PGN
 130316 messages will include an ```Index``` field value.
 
