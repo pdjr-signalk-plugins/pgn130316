@@ -88,56 +88,64 @@ from a sensor by:
 
 ## Plugin configuration
 
-The default plugin configuration has the following form:
 ```
 {
   "configuration": {
     "temperatureMapping": [
-      { "key": "Sea Temperature", "path": "environment.water.<index>" },
-      { "key": "Outside Temperature", "path": "environment.outside.<index>" },
-      { "key": "Inside Temperature", "path": "environment.inside.<index>" },
-      { "key": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
-      { "key": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
-      { "key": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
-      { "key": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
-      { "key": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-      { "key": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-      { "key": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
-      { "key": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
-      { "key": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
-      { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
-      { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
-      { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
-      { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-      { "key": "16", "path": "environment.inside.heating.thermalStore.<index>" }
-      { "key": ".*", "path": "sensors.temperature.<source>.<index>" }
+      { "source": "Sea Temperature", "path": "environment.water.<index>" },
+      { "source": "Outside Temperature", "path": "environment.outside.<index>" },
+      { "source": "Inside Temperature", "path": "environment.inside.<index>" },
+      { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
+      { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
+      { "source": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
+      { "source": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
+      { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+      { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+      { "source": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
+      { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
+      { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
+      { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
+      { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
+      { "source": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
+      { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
+      { "source": "16", "path": "environment.inside.heating.thermalStore.<index>" },
+      { "source": ".*", "path": "sensors.temperature.<source>.<index>" }
     ]                                                             
   },                                                              
   "enabled": true                                                 
 }                  
 ```
 
-The "temperatureMapping" property value is an ordered list of pairs
-each of which defines a node 'path' to be used when processing
-received messages with a ```Source``` field value which matches the
-regular expression specified by "key".
-The value specified for "path" can include the tokens '<source>' and/or
-'<index>' which will be replaced with the values of the ```Source```
-and ```Index``` fields in the received PGN respectively.
+The plugin is configured through a ```temperatureMapping``` array
+property value which consists of an ordered list of pairs each of which
+defines the mapping between a ```source``` regular expression and a
+node ```path```.
 
-In selecting a path, the "temperatureMapping" array is processed in
-order and the first "key" which matches the received ```Source```
-value is selected.
+When a PGN 130316 message arrives, the value of the PGN's ```Source```
+field is tested against each ```source``` value in turn until a match
+is made and the corresponding ```source``` path selected.
+If the selected ```path``` contains either of the tokens '<source>' or
+'<index>' then these will be replaced respectively by the PGN's
+```Source``` and ```Index``` field values. 
 
-This default configuration mostly implements the default Signal K
-behaviour with some slight corrections for typographic and logical
-inconsistencies and acknowledging that all PGN 130316 messages will
-always include an ```Index``` field value that should be honoured.
+The PGN ```Source``` field is an integer value in the range 0 through
+254 with the meaning of codes 0 through 15 defined in the NMEA 2000
+specification.
+Signal K's canboat parser converts these sixteen numeric codes into
+their semantic equivalents leaving un-defined values as the raw numeric
+code.
 
-The default configuration includes a catch-all "key" value as its last
-mapping, which ensures that any data received with a ```Source```
-property value that is outside the set of values defined in the NMEA
-2000 specification is put somewhere.
+The emergence of PGN 130316 in NMEA 2000 compromised both the semantics
+of temperature source codes and Signal K's mapping of codes into node
+paths.
+The default configuration file supplied with the plugin implements to
+preserve the legacy Signal K path allocations with some corrections for
+logical inconsistencies especially by acknowledging that *all* PGN
+130316 messages will include an ```Index``` field value.
+
+The last two maps in the example configuration shown above illustrate
+how to catch a specif numeric ```Source``` value and how to provide
+a catch-all.
 
 ## Author
 
