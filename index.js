@@ -45,25 +45,25 @@ module.exports = function(app) {
             }
           }
         }
-      }
+      },
       "default": [
-        { "source": "Sea Temperature", "path": "environment.water.<index>" },
-        { "source": "Outside Temperature", "path": "environment.outside.<index>" },
-        { "source": "Inside Temperature", "path": "environment.inside.<index>" },
-        { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
-        { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
-        { "source": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
-        { "source": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
-        { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-        { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-        { "source": "Heating System Temperature", "path": "sensors.temperature.heating.<index>" },
-        { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
-        { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
-        { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
-        { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
-        { "source": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
-        { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-        { "source": ".*", "path": "sensors.temperature.<source>.<index>" }
+        { "source": "Sea Temperature", "path": "environment.water.<instance>" },
+        { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
+        { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
+        { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
+        { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
+        { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
+        { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
+        { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+        { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+        { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
+        { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
+        { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
+        { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
+        { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
+        { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
+        { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
+        { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
       ]
     }
   };
@@ -84,7 +84,7 @@ module.exports = function(app) {
               path = path + '.' + 'temperature';
               if (!paths.has(path)) {
                 paths.add(path);
-                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")" });
+                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range", "source":  "" + n2k.fields['Source'], "instance": "" + n2k.fields['Index'] });
                 delta.commit();
               }
             }
@@ -97,7 +97,14 @@ module.exports = function(app) {
         {
           node: function(n2k) {
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
-            if (path) path = path + '.' + 'setTemperature';
+            if (path) {
+              path = path + '.' + 'setTemperature';
+              if (!paths.has(path)) {
+                paths.add(path);
+                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range", "source":  "" + n2k.fields['Source'], "instance": "" + n2k.fields['Index'] });
+                delta.commit();
+              }
+            }
             return(path);
           },
           value: function(n2k) {
@@ -111,10 +118,10 @@ module.exports = function(app) {
   plugin.stop = function() {
   }
 
-  function getPath(mapping, source, index) {
+  function getPath(mapping, source, instance) {
     var retval = undefined;
-    var found = mapping.find((s,p) => source.match(s));
-    if (found) retval = (found.path.replace('<source>', source)).replace('<index>', index);
+    var found = mapping.find(map => source.match(map.source));
+    if (found) retval = (found.path.replace('<source>', source)).replace('<instance>', instance);
     return(retval);
   }
   

@@ -34,9 +34,9 @@ the following characteristics:
    K store (although it can be inferred by reversing the mapping
    described above).
 
-5. PGN 130316 ```Index``` data (i.e. the NMEA 2000 instance of the
-   transmitting sensor) is not saved in the Signal K store (although it
-   can also be inferred by reversing the mapping described above).
+5. PGN 130316 ```Instance``` data is not saved in the Signal K store
+   (although it can also be inferred by reversing the mapping described
+   above).
    
 6. Meta data describing the created temperature node paths is not
    saved to to the Signal K store.
@@ -57,9 +57,9 @@ PGN 130316 with the following characteristics.
    store under a 'setTemperature' key.
 
 4. PGN 130316 ```Temperature Source``` data is saved to the Signal K
-   store as part of the node source description.  
+   store as part of the meta data associated with the node path.  
 
-5. PGN 130316 ```Index``` data is saved to the Signal K store as meta
+5. PGN 130316 ```Instance``` data is saved to the Signal K store as meta
    data associated with the node path.
 
 6. Unit and description properties are added to the Signal K store as
@@ -71,24 +71,24 @@ PGN 130316 with the following characteristics.
 {
   "configuration": {
     "temperatureMapping": [
-      { "source": "Sea Temperature", "path": "environment.water.<index>" },
-      { "source": "Outside Temperature", "path": "environment.outside.<index>" },
-      { "source": "Inside Temperature", "path": "environment.inside.<index>" },
-      { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
-      { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
-      { "source": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
-      { "source": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
-      { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-      { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-      { "source": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
-      { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
-      { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
-      { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
-      { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
-      { "source": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
-      { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-      { "source": "16", "path": "environment.inside.heating.thermalStore.<index>" },
-      { "source": ".*", "path": "sensors.temperature.<source>.<index>" }
+      { "source": "Sea Temperature", "path": "environment.water.<instance>" },
+      { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
+      { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
+      { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
+      { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
+      { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
+      { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
+      { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+      { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+      { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
+      { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
+      { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
+      { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
+      { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
+      { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
+      { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
+      { "source": "16", "path": "environment.inside.heating.thermalStore.<instance>" },
+      { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
     ]                                                             
   },                                                              
   "enabled": true                                                 
