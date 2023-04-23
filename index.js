@@ -35,7 +35,7 @@ module.exports = function(app) {
         "items": {
           "type": "object",
           "properties": {
-            "key" : {
+            "source" : {
               "type": "string"
             },
             "path" : {
@@ -45,23 +45,23 @@ module.exports = function(app) {
         }
       }
       "default": [
-        { "key": "Sea Temperature", "path": "environment.water.<index>" },
-        { "key": "Outside Temperature", "path": "environment.outside.<index>" },
-        { "key": "Inside Temperature", "path": "environment.inside.<index>" },
-        { "key": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
-        { "key": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
-        { "key": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
-        { "key": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
-        { "key": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-        { "key": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-        { "key": "Heating System Temperature", "path": "sensors.temperature.heating.<index>" },
-        { "key": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
-        { "key": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
-        { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
-        { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
-        { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
-        { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-        { "key": ".*", "path": "sensors.temperature.<source>.<index>" }
+        { "source": "Sea Temperature", "path": "environment.water.<index>" },
+        { "source": "Outside Temperature", "path": "environment.outside.<index>" },
+        { "source": "Inside Temperature", "path": "environment.inside.<index>" },
+        { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<index>" },
+        { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<index>" },
+        { "source": "Live Well Temperature", "path": "tanks.liveWell.<index>" },
+        { "source": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
+        { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+        { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
+        { "source": "Heating System Temperature", "path": "sensors.temperature.heating.<index>" },
+        { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
+        { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
+        { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
+        { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
+        { "source": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
+        { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
+        { "source": ".*", "path": "sensors.temperature.<source>.<index>" }
       ]
     }
   };
@@ -101,11 +101,8 @@ module.exports = function(app) {
 
   function getPath(mapping, source, index) {
     var retval = undefined;
-    mapping.forEach(map => {
-      if ((source.match(map.key)) && (!retval)) retval = map.path;
-    });
-    if (retval) retval = retval.replace('<source>', source);
-    if (retval) retval = retval.replace('<index>', index);
+    var found = mapping.find((s,p) => source.match(s));
+    if (found) retval = found.path.replace('<source>', source).replace('<index>', index);
     return(retval);
   }
   

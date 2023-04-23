@@ -18,73 +18,49 @@ the following characteristics:
    of a received PGN 130316 message into a node path using 
    [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
    statically defined mapping.
-   The resulting disposition of temperature data across the Signal K
+   The mapping in use derives from an NMEA 2000 specification which
+   pre-dates and is not entirely compatible with the features of PGN
+   130316.
+   The consequent disposition of temperature data across the Signal K
    store may not be to everyone's taste.
 
-2. PGN 130316 ```Temperature Source``` data is not explicitly saved in
-   the store (although it can be intuited by reversing the mapping
+2. PGN 130316 ```Temperature``` data is saved to the Signal K data
+   store under a 'temperature' key.
+   
+3. PGN 130316 ```Set Temperature``` data is not saved into the Signal K
+   store.
+
+4. PGN 130316 ```Temperature Source``` data is not saved in the Signal
+   K store (although it can be inferred by reversing the mapping
    described above).
 
-3. PGN 130316 ```Index``` data (i.e. the NMEA 2000 instance of the
-   transmitting sensor) is not explicitly saved in the store (although
-   it can be intuited by reversing the mapping described above).
-
-4. PGN 130316 ```Set Temperature``` data is not made available in
-   Signal K.
-
-**pdjr-skplugin-pgn130316** implements a more flexible and comprehensive
-mechanism for the handling PGN 130316 with the following characteristics.
-
-1. Temperature readings are mapped into the Signal K store using
-   a user-configurable mapping from PGN 130316 ```Temperature Source```
-   into a Signal K node path.
-
-2. ```Temperature Source``` data is explicitly saved in the store as
-   part of the node path description.  
-
-3. ```Set Temperature``` data is interpolated into the tree at a
-   node path adjacent to the actual temperature reading.
-
-4. ```Index``` data and some other properties are saved into the tree
-   as meta data associated with the node path.
+5. PGN 130316 ```Index``` data (i.e. the NMEA 2000 instance of the
+   transmitting sensor) is not saved in the Signal K store (although it
+   can also be inferred by reversing the mapping described above).
 
 ## Description
 
-**pdjr-skplugin-pgn130316** interpolates PGN 130316 messages received
-from a sensor by:
+**pdjr-skplugin-pgn130316** implements an interpolation mechanism for
+PGN 130316 with the following characteristics.
 
-* Creating a node path in the Signal K store for the sensor's reported
-  actual temperature.
-  This node path is derived from the sensor's reported temperature
-  source through a mapping defined in the plugin configuration.
-  The terminal component of the node path name is 'temperature'.
+1. Temperature readings are mapped into the Signal K store using a
+   user-defined mapping from PGN 130316 ```Temperature Source``` to a
+   Signal K node path.
 
-* Creating a node path in the Signal K store for the sensor's reported
-  set temperature.
-  This node path is derived from the sensor's reported temperature
-  source through a mapping defined in the plugin configuration.
-  The terminal component of the node path name is 'setTemperature'
+2. PGN 130316 ```Temperature``` data is saved to the Signal K data
+   store under a 'temperature' key.
+   
+3. PGN 130316 ```Set Temperature``` data is saved to the Signal K
+   store under a 'setTemperature' key.
 
-* Setting the node path description property to the sensor's reported
-  source type name which will be one of
-  **Sea Temperature**,
-  **Outside Temperature**,
-  **Inside Temperature**,
-  **Engine Room Temperature**,
-  **Main Cabin Temperature**,
-  **Live Well Temperature**,
-  **Bait Well Temperature**,
-  **Refrigeration Temperature**,
-  **Heating System Temperature**,
-  **Dew Point Temperature**,
-  **Apparent Wind Chill Temperature**,
-  **Theoretical Wind Chill Temperature**,
-  **Heat Index Temperature**,
-  **Freezer Temperature**,
-  **Exhaust Gas Temperature**.
+4. PGN 130316 ```Temperature Source``` data is saved to the Signal K
+   store as part of the node source description.  
 
-* Inserting 'unit', 'description' and 'index' properties into the
-  meta data associated with each generated node path.
+5. PGN 130316 ```Index``` data is saved to the Signal K store as meta
+   data associated with the node path.
+
+6. Unit and description properties are added to the Signal K store as
+   meta data associated with the node path.
 
 ## Plugin configuration
 
