@@ -61,7 +61,7 @@ module.exports = function(app) {
         { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
         { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
         { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-        { "key": ".*", "path": "sensors.temperature.fallback.<index>" }
+        { "key": ".*", "path": "sensors.temperature.<source>.<index>" }
       ]
     }
   };
@@ -99,11 +99,12 @@ module.exports = function(app) {
   plugin.stop = function() {
   }
 
-  function getPath(mapping, key, index) {
+  function getPath(mapping, source, index) {
     var retval = undefined;
     mapping.forEach(map => {
-      if ((key.match(map.key)) && (!retval)) retval = map.path;
+      if ((source.match(map.key)) && (!retval)) retval = map.path;
     });
+    if (retval) retval = retval.replace('<source>', source);
     if (retval) retval = retval.replace('<index>', index);
     return(retval);
   }

@@ -102,14 +102,15 @@ The default plugin configuration has the following form:
       { "key": "Bait Well Temperature", "path": "tanks.baitWell.<index>" },
       { "key": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<index>" },
       { "key": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<index>" },
-      { "key": "Heating System Temperature", "path": "environment.inside.heatingSystem.<index>" },
+      { "key": "Heating System Temperature", "path": "environment.inside.heating.<index>" },
       { "key": "Dew Point Temperature", "path": "environment.outside.dewPoint.<index>" },
       { "key": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<index>" },
       { "key": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<index>" },
       { "key": "Heat Index Temperature", "path": "environment.outside.heatIndex.<index>" },
       { "key": "Freezer Temperature", "path": "environment.inside.freezer.<index>" },
       { "key": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<index>" },
-      { "key": ".*", "path": "sensors.temperature.fallback.<index>" }
+      { "key": "16", "path": "environment.inside.heating.thermalStore.<index>" }
+      { "key": ".*", "path": "sensors.temperature.<source>.<index>" }
     ]                                                             
   },                                                              
   "enabled": true                                                 
@@ -120,9 +121,9 @@ The "temperatureMapping" property value is an ordered list of pairs
 each of which defines a node 'path' to be used when processing
 received messages with a ```Source``` field value which matches the
 regular expression specified by "key".
-The value specified for "path" includes the token '<index>' which
-will be replaced with the value of the ```Index``` field in the PGN
-130316 message that is being processed.
+The value specified for "path" can include the tokens '<source>' and/or
+'<index>' which will be replaced with the values of the ```Source```
+and ```Index``` fields in the received PGN respectively.
 
 In selecting a path, the "temperatureMapping" array is processed in
 order and the first "key" which matches the received ```Source```
@@ -131,11 +132,12 @@ value is selected.
 This default configuration mostly implements the default Signal K
 behaviour with some slight corrections for typographic and logical
 inconsistencies and acknowledging that all PGN 130316 messages will
-include an ```Index``` field value that should be honoured.
+always include an ```Index``` field value that should be honoured.
 
-The default configuration also includes a catch-all "key" value as
-part of the last mapping, ensuring that any data that is received
-with an invalid ```Source``` property is put somewhere.
+The default configuration includes a catch-all "key" value as its last
+mapping, which ensures that any data received with a ```Source```
+property value that is outside the set of values defined in the NMEA
+2000 specification is put somewhere.
 
 ## Author
 
