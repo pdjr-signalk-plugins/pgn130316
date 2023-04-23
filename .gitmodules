@@ -1,0 +1,3 @@
+[submodule "lib/signalk-libdelta"]
+	path = lib/signalk-libdelta
+	url = https://github.com/preeve9534/signalk-libdelta

@@ -14,6 +14,8 @@
  * permissions and limitations under the License.
  */
 
+const Delta = require("./lib/signalk-libdelta/Delta.js");
+
 const PLUGIN_ID = "pgn130316";
 const PLUGIN_NAME = "pdjr-skplugin-pgn130316";
 const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
@@ -70,12 +72,22 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
 
+    var paths = new Set();
+    var delta = new Delta(app, plugin.id);
+
     app.emitPropertyValue('pgn-to-signalk', {
       130316: [
         {
           node: function(n2k) {
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
-            if (path) path = path + '.' + 'temperature';
+            if (path) {
+              path = path + '.' + 'temperature';
+              if (!paths.has(path)) {
+                paths.add(path);
+                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")" });
+                delta.commit();
+              }
+            }
             return(path);
           },
           value: function(n2k) {
