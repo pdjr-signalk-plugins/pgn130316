@@ -37,6 +37,9 @@ the following characteristics:
 5. PGN 130316 ```Index``` data (i.e. the NMEA 2000 instance of the
    transmitting sensor) is not saved in the Signal K store (although it
    can also be inferred by reversing the mapping described above).
+   
+6. Meta data describing the created temperature node paths is not
+   saved to to the Signal K store.
 
 ## Description
 
