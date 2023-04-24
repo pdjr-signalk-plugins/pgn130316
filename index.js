@@ -72,23 +72,30 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
 
-    var paths = new Set();
+    var nodes = new Set();
     var delta = new Delta(app, plugin.id);
 
     app.emitPropertyValue('pgn-to-signalk', {
       130316: [
         {
           node: function(n2k) {
+            var node = undefined;
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+
             if (path) {
-              path = path + '.' + 'temperature';
-              if (!paths.has(path)) {
-                paths.add(path);
-                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range", "source":  "" + n2k.fields['Source'], "instance": "" + n2k.fields['Index'] });
+              node = path.path + '.' + 'temperature';
+              if (!nodes.has(node)) {
+                nodes.add(node);
+                delta.addMeta(node, {
+                  "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
+                  "instance": "" + n2k.fields['Instance'],
+                  "source": path.source,
+                  "units": "K"
+                });
                 delta.commit();
               }
             }
-            return(path);
+            return(node);
           },
           value: function(n2k) {
             return(n2k.fields['Temperature']);
@@ -96,16 +103,23 @@ module.exports = function(app) {
         },
         {
           node: function(n2k) {
+            var node = undefined;
             var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+
             if (path) {
-              path = path + '.' + 'setTemperature';
-              if (!paths.has(path)) {
-                paths.add(path);
-                delta.addMeta(path, { "units": "K", "description": "Temperature, Extended Range", "source":  "" + n2k.fields['Source'], "instance": "" + n2k.fields['Index'] });
+              node = path.path + '.' + 'setTemperature';
+              if (!nodes.has(node)) {
+                nodes.add(node);
+                delta.addMeta(node, {
+                  "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
+                  "instance": "" + n2k.fields['Instance'],
+                  "source": path.source,
+                  "units": "K"
+                });
                 delta.commit();
               }
             }
-            return(path);
+            return(node);
           },
           value: function(n2k) {
             return(n2k.fields['Set Temperature']);
@@ -120,8 +134,12 @@ module.exports = function(app) {
 
   function getPath(mapping, source, instance) {
     var retval = undefined;
-    var found = mapping.find(map => source.match(map.source));
-    if (found) retval = (found.path.replace('<source>', source)).replace('<instance>', instance);
+    for (var i = 0; i < mapping.length; i++) {
+      if (source.match(mapping[i].source)) {
+        retval = { source: "" + ((i < 16)?i:source), path: ((mapping[i].path).replace('<source>', source)).replace('<instance>', instance) };
+        break;
+      }
+    }
     return(retval);
   }
   

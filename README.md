@@ -15,9 +15,9 @@ the following characteristics:
 
 1. Temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
-   node paths using a
-   [statically defined mapping](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js).
-   This mapping derives from an NMEA 2000 specification which pre-dates
+   node paths using
+   [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
+   mapping which derives from an NMEA 2000 specification that pre-dates
    PGN 130316 and does not support multiple sensor instances across
    all temperature sources leading to the possibility of some data
    loss.
@@ -116,14 +116,12 @@ Values in the range 0 through 15 have semantics defined in the NMEA
 codes into their named equivalents.
 Values outside the range 0 through 15 remain numeric.
 
-The emergence of PGN 130316 in NMEA 2000 compromised both the semantics
-of temperature source codes and Signal K's mapping of codes into node
-paths.
 The default configuration file supplied with the plugin preserves as
 far as possible the legacy Signal K path allocations with some
 corrections for logical inconsistencies, especially by acknowledging
 that *all* PGN 130316 messages will be characterised by an
 ```Instance``` field value.
+Change this to suit your needs.
 
 The last two maps in the example configuration shown above illustrate
 how to catch a specific numeric ```Temperature Source``` value and how
