@@ -10,17 +10,15 @@ adding enhanced support for PGN 130316 Temperature, Extended Range.
 Versions of Signal K released before March 2022 lack the ability to
 process PGN 130316.
 
-Later versions of Signal K process PGN 130316 messages in the
-following way:
+Later versions of Signal K process PGN 130316 messages in the following
+way:
 
-1. PGN 130316 temperature readings are inserted into Signal K at locations derived
+1. Temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
-   node paths using
-   [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
-   mapping which derives from an NMEA 2000 specification that pre-dates
-   PGN 130316 and does not support multiple sensor instances across
-   all temperature sources leading to the possibility of some data
-   loss.
+   node paths using this
+   [mapping](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js).
+   Lack of support in the mapping for multiple sensor instances across
+   all temperature sources raises the possibility of data loss.
 
 2. PGN 130316 ```Temperature``` field data is saved to Signal K under a
    'temperature' key.
