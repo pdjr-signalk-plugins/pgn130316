@@ -136,7 +136,10 @@ module.exports = function(app) {
     var retval = undefined;
     for (var i = 0; i < mapping.length; i++) {
       if (source.match(mapping[i].source)) {
-        retval = { source: "" + ((i < 16)?i:source), path: ((mapping[i].path).replace('<source>', source)).replace('<instance>', instance) };
+        retval = {
+          source: "" + ((i < 16)?i:source),
+          path: ((mapping[i].path).replace('<source>', source)).replace('<instance>', instance)
+        };
         break;
       }
     }
