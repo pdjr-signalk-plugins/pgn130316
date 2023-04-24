@@ -10,56 +10,44 @@ adding enhanced support for PGN 130316 Temperature, Extended Range.
 Versions of Signal K released before March 2022 lack the ability to
 process PGN 130316.
 
-Later versions of Signal K process PGN 130316 messages in the following
-way:
+Later versions of Signal K handle PGN 130316 messages in a limited way.
 
 1. Temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
    node paths using this
    [mapping](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js).
    Lack of support in the mapping for multiple sensor instances across
-   all temperature sources raises the possibility of data loss.
+   all temperature sources raises the possibility of data loss and,
+   inevitably, the mapping locations may not be to everyone's taste.
 
 2. PGN 130316 ```Temperature``` field data is saved to Signal K under a
-   'temperature' key.
-   
-3. PGN 130316 ```Set Temperature``` field data is not saved to Signal
-   K.
+   'temperature' key, but ```Set Temperature``` field data is completely
+   ignored.
 
-4. PGN 130316 ```Temperature Source``` field data is not saved to
-   Signal K store (although it can be inferred by reversing the mapping
-   described above).
-
-5. PGN 130316 ```Instance``` field data is not saved to Signal K
-   (although it can also be inferred by reversing the mapping described
-   above).
+3. PGN 130316 ```Temperature Source``` and ```Instance``` field data is
+   not saved to the Signal K store (although both values can be inferred
+   by reversing the mapping discussed above.
    
-6. Meta data describing temperature node paths is not saved to Signal
-   K.
+4. Meta data describing the created node paths is not generated.
 
 ## Description
 
-**pdjr-skplugin-pgn130316** implements an interpolation mechanism for
-PGN 130316 with the following characteristics.
+**pdjr-skplugin-pgn130316** implements a comprehensive interpolation
+mechanism for PGN 130316.
 
 1. Temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
-   node paths using a user-defined mapping capable of fully supporting
-   PGN 130316.
+   node paths using a user-defined, fully parameterised, mapping.
 
-2. PGN 130316 ```Temperature``` field data is saved to Signal K under a
-   'temperature' key.
+2. PGN 130316 ```Temperature``` and ```Set Temperature``` field data is
+   used to create 'temperature' and 'setTemperature' keys under the
+   generated node path.
    
-3. PGN 130316 ```Set Temperature``` data is saved to Signal K under a
-   'setTemperature' key.
+3. PGN 130316 ```Temperature Source``` and ```Instance``` data is saved
+   as meta data associated with the generated keys.
 
-4. PGN 130316 ```Temperature Source``` data is saved to Signal K as
-   meta data property 'source'.  
-
-5. PGN 130316 ```Instance``` data is saved to Signal K as meta data
-   property 'instance'.
-
-6. Meta data properties 'unit' and 'description' are saved to Signal K.
+4. 'unit' and 'description' properties are also included in the key meta
+   data.
 
 ## Plugin configuration
 
@@ -98,29 +86,24 @@ expression and a node ```path```.
 
 When a PGN 130316 message arrives, the value of the PGN's
 ```Temperature Source``` field is tested against each ```source```
-regex in turn until a match is made and the corresponding node
+regex in turn until a match is made and a corresponding node
 ```path``` selected.
 If the selected ```path``` contains either of the tokens '\<source\>'
 or '\<instance\>' then these will be replaced respectively by the PGN's
 ```Temperature Source``` and ```Instance``` field values. 
 
-The PGN 130316 ```Temperature Source``` field is an integer value in
-the range 0 through 254.
-Values in the range 0 through 15 have semantics defined in the NMEA
-2000 specification and Signal K's canboat parser converts these numeric
-codes into their named equivalents.
-Values outside the range 0 through 15 remain numeric.
-
 The default configuration file supplied with the plugin preserves as
 far as possible the legacy Signal K path allocations with some
 corrections for logical inconsistencies, especially by acknowledging
-that *all* PGN 130316 messages will be characterised by an
-```Instance``` field value.
-Change this to suit your needs.
+that *all* PGN 130316 messages will include an ```Instance``` field
+value.
 
 The last two maps in the example configuration shown above illustrate
-how to catch a specific numeric ```Temperature Source``` value and how
-to provide a catch-all.
+how to catch a specific ```Temperature Source``` PGN field value and
+how to provide a catch-all.
+Note that ```Temperature Source``` values for source codes 0 through
+15 are mapped by Signal K into their NMEA 2000 specified semantic
+names; source codes 16 and above appear as numeric values.
 
 ## Author
 
