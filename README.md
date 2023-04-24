@@ -20,7 +20,7 @@ the following characteristics:
    This mapping derives from an NMEA 2000 specification which pre-dates
    PGN 130316 and does not support multiple sensor instances across
    all temperature sources leading to the possibility of some data
-   loss.  
+   loss.
    The consequent disposition of temperature data within Signal K
    may not be to everyone's taste.
 
