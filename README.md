@@ -10,10 +10,10 @@ adding enhanced support for PGN 130316 Temperature, Extended Range.
 Versions of Signal K released before March 2022 lack the ability to
 process PGN 130316.
 
-Later versions implement an incomplete interpolation mechanism with
-the following characteristics:
+Later versions of Signal K process PGN 130316 messages in the
+following way:
 
-1. Temperature readings are inserted into Signal K at locations derived
+1. PGN 130316 temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
    node paths using
    [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
