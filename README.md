@@ -21,8 +21,6 @@ the following characteristics:
    PGN 130316 and does not support multiple sensor instances across
    all temperature sources leading to the possibility of some data
    loss.
-   The consequent disposition of temperature data within Signal K
-   may not be to everyone's taste.
 
 2. PGN 130316 ```Temperature``` field data is saved to Signal K under a
    'temperature' key.
@@ -38,8 +36,8 @@ the following characteristics:
    (although it can also be inferred by reversing the mapping described
    above).
    
-6. Meta data describing the created temperature node paths is not
-   saved to Signal K.
+6. Meta data describing temperature node paths is not saved to Signal
+   K.
 
 ## Description
 
