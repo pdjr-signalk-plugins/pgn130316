@@ -58,13 +58,12 @@ PGN 130316 with the following characteristics.
    'setTemperature' key.
 
 4. PGN 130316 ```Temperature Source``` data is saved to Signal K as
-   part of the meta data associated with a generated node path.  
+   meta data property 'source'.  
 
 5. PGN 130316 ```Instance``` data is saved to Signal K as meta data
-   associated with a generated node path.
+   property 'instance'.
 
-6. Unit and description properties are added to Signal K as meta data
-   associated with a generated node path.
+6. Meta data properties 'unit' and 'description' are saved to Signal K.
 
 ## Plugin configuration
 
