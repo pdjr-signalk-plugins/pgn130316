@@ -25,5 +25,8 @@
   "homepage": "https://github.com/preeve9534/pdjr-skplugin-pgn130316#readme",
   "dependencies": {
     "sprintf-js": "^1.1.2"
+  },
+  "directories": {
+    "lib": "lib"
   }
 }
