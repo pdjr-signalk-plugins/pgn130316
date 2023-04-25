@@ -10,7 +10,7 @@ adding enhanced support for PGN 130316 Temperature, Extended Range.
 Versions of Signal K released before March 2022 lack the ability to
 process PGN 130316.
 
-Later versions of Signal K handle PGN 130316 messages in a limited way.
+Later versions of Signal K handle PGN 130316 messages in a limited way:
 
 1. Temperature readings are inserted into Signal K at locations derived
    by translating PGN 130316 ```Temperature Source``` field values into
