@@ -110,4 +110,4 @@ names; source codes 15 and above appear as numeric values.
 
 ## Author
 
-Paul Reeve <*preeve_at_pdjr.eu*>
+Paul Reeve <*preeve_at_pdjr_dot_eu*>
