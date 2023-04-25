@@ -102,8 +102,8 @@ The last two maps in the example configuration shown above illustrate
 how to catch a specific ```Temperature Source``` PGN field value and
 how to provide a catch-all.
 Note that ```Temperature Source``` values for source codes 0 through
-15 are mapped by Signal K into their NMEA 2000 specified semantic
-names; source codes 16 and above appear as numeric values.
+14 are mapped by Signal K into their NMEA 2000 specified semantic
+names; source codes 15 and above appear as numeric values.
 
 ## Author
 
