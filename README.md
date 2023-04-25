@@ -32,11 +32,11 @@ Later versions of Signal K handle PGN 130316 messages in a limited way:
 
 ## Description
 
-**pdjr-skplugin-pgn130316** implements a comprehensive interpolation
-mechanism for PGN 130316.
+**pdjr-skplugin-pgn130316** implements a flexible interpolation mechanism
+for PGN 130316:
 
-1. Temperature readings are inserted into Signal K at locations derived
-   by translating PGN 130316 ```Temperature Source``` field values into
+1. A node path for temperature readings is selected from a user-defined
+   mapping using the PGN 130316 ```Temperature Source``` field value. into
    node paths using a user-defined, fully parameterised, mapping.
 
 2. PGN 130316 ```Temperature``` and ```Set Temperature``` field data is
