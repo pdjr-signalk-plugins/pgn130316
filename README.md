@@ -14,34 +14,37 @@ Later versions of Signal K handle PGN 130316 messages in a limited way:
 
 1. A node path is selected from
    [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
-   mapping using the PGN 130316 ```Temperature Source``` field as a
-   key.
+   mapping using the PGN 130316 ```Temperature Source``` field value
+   as a key.
    Lack of support in the mapping for multiple sensor instances across
-   all temperature sources raises the possibility of data loss and,
-   inevitably, the mapping locations may not be to everyone's taste.
+   all temperature sources raises the possibility of data loss.
+   Inevitably, the default mapping locations may not be to everyone's
+   taste.
 
-2. PGN 130316 ```Temperature``` field data is saved to Signal K under a
-   'temperature' key, but ```Set Temperature``` field data is completely
-   ignored.
+2. A 'temperature' key is used to capture the value of the PGN 130316
+   ```Temperature``` field; the ```Set Temperature``` field is, however,
+   completely ignored.
 
 3. PGN 130316 ```Temperature Source``` and ```Instance``` field data is
    not saved to the Signal K store (although both values can be inferred
    by reversing the mapping discussed above.
    
-4. Meta data describing the created node paths is not generated.
+4. Meta data describing the created 'temperature' key is not generated.
 
 ## Description
 
-**pdjr-skplugin-pgn130316** implements a flexible interpolation mechanism
-for PGN 130316:
+**pdjr-skplugin-pgn130316** overcomes most of the limitations described
+above by handling PGN 130316 messages in the following mechanism way:
 
-1. A node path for temperature readings is selected from a user-defined
-   mapping using the PGN 130316 ```Temperature Source``` field value. into
-   node paths using a user-defined, fully parameterised, mapping.
+1. A node path is selected from a user-defined mapping supplied in the
+   plugin configuration using the PGN 130316 ```Temperature Source```
+   field value as a key.
+   The node path can be parameterised with both ```Temperature Source```
+   and ```Instance``` field values.
 
-2. PGN 130316 ```Temperature``` and ```Set Temperature``` field data is
-   used to create 'temperature' and 'setTemperature' keys under the
-   generated node path.
+2. A 'temperature' key captures the value of the PGN 130316
+   ```Temperature``` field and a 'setTemperature' key captures the value
+   of the ```Set Temperature``` field.
    
 3. PGN 130316 ```Temperature Source``` and ```Instance``` data is saved
    as meta data associated with the generated keys.
