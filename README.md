@@ -12,10 +12,10 @@ process PGN 130316.
 
 Later versions of Signal K handle PGN 130316 messages in a limited way:
 
-1. Temperature readings are inserted into Signal K at locations derived
-   by translating PGN 130316 ```Temperature Source``` field values into
-   node paths using this
-   [mapping](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js).
+1. A node path is selected from
+   [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
+   mapping using the PGN 130316 ```Temperature Source``` field as a
+   key.
    Lack of support in the mapping for multiple sensor instances across
    all temperature sources raises the possibility of data loss and,
    inevitably, the mapping locations may not be to everyone's taste.
