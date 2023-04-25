@@ -91,8 +91,7 @@ module.exports = function(app) {
                   "instance": "" + n2k.fields['Instance'],
                   "source": path.source,
                   "units": "K"
-                });
-                delta.commit();
+                }).commit().clear();
               }
             }
             return(node);
@@ -115,8 +114,7 @@ module.exports = function(app) {
                   "instance": "" + n2k.fields['Instance'],
                   "source": path.source,
                   "units": "K"
-                });
-                delta.commit();
+                }).commit().clear();
               }
             }
             return(node);
