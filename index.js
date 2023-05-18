@@ -70,7 +70,8 @@ module.exports = function(app) {
   plugin.uiSchema = PLUGIN_UISCHEMA;
 
   plugin.start = function(options) {
-
+    const log = new Log(plugin.id, { ncallback: app.setPluginStatus, ecallback: app.setPluginError });
+    var delta = new Delta(app, plugin.id);  
   
     if (options) {
 
@@ -79,8 +80,6 @@ module.exports = function(app) {
         app.savePluginOptions(options, () => log.N("saving default configuration to disk", false));
       }
 
-      const log = new Log(plugin.id, { ncallback: app.setPluginStatus, ecallback: app.setPluginError });
-      var delta = new Delta(app, plugin.id);  
       var nodes = new Set();
 
       app.emitPropertyValue('pgn-to-signalk', {
