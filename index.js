@@ -14,11 +14,51 @@
  * permissions and limitations under the License.
  */
 
-const Delta = require("./lib/signalk-libdelta/Delta.js");
-
 const PLUGIN_ID = "pgn130316";
 const PLUGIN_NAME = "pdjr-skplugin-pgn130316";
 const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
+const PLUGIN_SCHEMA = {
+  "title": "Configuration for pdjr-skplugin-pgn130316",
+  "type": "object",
+  "required": [ "temperatureMapping" ],
+  "properties": {
+    "temperatureMapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source" : {
+            "type": "string"
+          },
+          "path" : {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+};
+const PLUGIN_UISCHEMA = {};
+
+const OPTIONS_TEMPERATUREMAPPING_DEFAULT = [
+  { "source": "Sea Temperature", "path": "environment.water.<instance>" },
+  { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
+  { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
+  { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
+  { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
+  { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
+  { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
+  { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+  { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+  { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
+  { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
+  { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
+  { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
+  { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
+  { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
+  { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
+  { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
+];
 
 module.exports = function(app) {
   var plugin = {};
@@ -26,105 +66,74 @@ module.exports = function(app) {
   plugin.id = PLUGIN_ID;
   plugin.name = PLUGIN_NAME;
   plugin.description = PLUGIN_DESCRIPTION;
-
-  plugin.schema = {
-    "title": "Configuration for pdjr-skplugin-pgn130316",
-    "type": "object",
-    "required": [ "temperatureMapping" ],
-    "properties": {
-      "temperatureMapping": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "source" : {
-              "type": "string"
-            },
-            "path" : {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "default": [
-        { "source": "Sea Temperature", "path": "environment.water.<instance>" },
-        { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
-        { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
-        { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
-        { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
-        { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
-        { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
-        { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
-        { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
-        { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
-        { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
-        { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
-        { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
-        { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
-        { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
-        { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
-        { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
-      ]
-    }
-  };
-
-  plugin.uiSchema = {};
+  plugin.schema = PLUGIN_SCHEMA;
+  plugin.uiSchema = PLUGIN_UISCHEMA;
 
   plugin.start = function(options) {
 
-    var nodes = new Set();
-    var delta = new Delta(app, plugin.id);
+  
+    if (options) {
 
-    app.emitPropertyValue('pgn-to-signalk', {
-      130316: [
-        {
-          node: function(n2k) {
-            var node = undefined;
-            var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+      if (!options.temperatureMapping) {
+        options.temperatureMapping = OPTIONS_TEMPERATUREMAPPING_DEFAULT;
+        app.savePluginOptions(options, () => log.N("saving default configuration to disk", false));
+      }
 
-            if (path) {
-              node = path.path + '.' + 'temperature';
-              if (!nodes.has(node)) {
-                nodes.add(node);
-                delta.addMeta(node, {
-                  "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
-                  "instance": "" + n2k.fields['Instance'],
-                  "source": path.source,
-                  "units": "K"
-                }).commit().clear();
+      const log = new Log(plugin.id, { ncallback: app.setPluginStatus, ecallback: app.setPluginError });
+      var delta = new Delta(app, plugin.id);  
+      var nodes = new Set();
+
+      app.emitPropertyValue('pgn-to-signalk', {
+        130316: [
+          {
+            node: function(n2k) {
+              var node = undefined;
+              var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+
+              if (path) {
+                node = path.path + '.' + 'temperature';
+                if (!nodes.has(node)) {
+                  nodes.add(node);
+                  delta.addMeta(node, {
+                    "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
+                    "instance": "" + n2k.fields['Instance'],
+                    "source": path.source,
+                    "units": "K"
+                  }).commit().clear();
+                }
               }
+              return(node);
+            },
+            value: function(n2k) {
+              return(n2k.fields['Temperature']);
             }
-            return(node);
           },
-          value: function(n2k) {
-            return(n2k.fields['Temperature']);
-          }
-        },
-        {
-          node: function(n2k) {
-            var node = undefined;
-            var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+          {
+            node: function(n2k) {
+              var node = undefined;
+              var path = getPath(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
 
-            if (path) {
-              node = path.path + '.' + 'setTemperature';
-              if (!nodes.has(node)) {
-                nodes.add(node);
-                delta.addMeta(node, {
-                  "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
-                  "instance": "" + n2k.fields['Instance'],
-                  "source": path.source,
-                  "units": "K"
-                }).commit().clear();
+              if (path) {
+                node = path.path + '.' + 'setTemperature';
+                if (!nodes.has(node)) {
+                  nodes.add(node);
+                  delta.addMeta(node, {
+                    "description": "Temperature, Extended Range (" + n2k.fields['Source'] + ")",
+                    "instance": "" + n2k.fields['Instance'],
+                    "source": path.source,
+                    "units": "K"
+                  }).commit().clear();
+                }
               }
+              return(node);
+            },
+            value: function(n2k) {
+              return(n2k.fields['Set Temperature']);
             }
-            return(node);
-          },
-          value: function(n2k) {
-            return(n2k.fields['Set Temperature']);
           }
-        }
-      ]
-    });
+        ]
+      });
+    }
   }
 
   plugin.stop = function() {

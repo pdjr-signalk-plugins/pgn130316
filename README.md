@@ -54,6 +54,9 @@ above by handling PGN 130316 messages in the following mechanism way:
 
 ## Plugin configuration
 
+On first execution the plugin will save the following default
+configuration file to disk.
+
 ```
 {
   "configuration": {
@@ -107,6 +110,11 @@ how to provide a catch-all.
 Note that ```Temperature Source``` values for source codes 0 through
 14 are mapped by Signal K into their NMEA 2000 specified semantic
 names; source codes 15 and above appear as numeric values.
+
+## Operation
+
+The plugin will start processing PGN 130316 messages as soon as it is
+installed.
 
 ## Author
 

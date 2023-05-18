@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Map PGN 130316 into Signal K",
   "main": "index.js",
+  "signalk-plugin-enabled-by-default": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/preeve9534/pdjr-skplugin-pgn130316.git"
+    "url": "git+https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316.git"
   },
   "keywords": [
     "signalk-node-server-plugin",
@@ -20,9 +21,9 @@
   "author": "Paul Reeve <preeve@pdjr.eu>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/preeve9534/pdjr-skplugin-pgn130316/issues"
+    "url": "https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316/issues"
   },
-  "homepage": "https://github.com/preeve9534/pdjr-skplugin-pgn130316#readme",
+  "homepage": "https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316#readme",
   "dependencies": {
     "sprintf-js": "^1.1.2"
   },
