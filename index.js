@@ -14,6 +14,9 @@
  * permissions and limitations under the License.
  */
 
+const Log = require("./lib/signalk-liblog/Log.js");
+const Delta = require("./lib/signalk-libdelta/Delta.js");
+
 const PLUGIN_ID = "pgn130316";
 const PLUGIN_NAME = "pdjr-skplugin-pgn130316";
 const PLUGIN_DESCRIPTION = "Map PGN 130316 into Signal K";
