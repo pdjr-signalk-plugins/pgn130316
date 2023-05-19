@@ -40,25 +40,27 @@ const PLUGIN_SCHEMA = {
 };
 const PLUGIN_UISCHEMA = {};
 
-const OPTIONS_TEMPERATUREMAPPING_DEFAULT = [
-  { "source": "Sea Temperature", "path": "environment.water.<instance>" },
-  { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
-  { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
-  { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
-  { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
-  { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
-  { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
-  { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
-  { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
-  { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
-  { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
-  { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
-  { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
-  { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
-  { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
-  { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
-  { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
-];
+const OPTIONS_DEFAULT = {
+  "temperatureMapping": [
+    { "source": "Sea Temperature", "path": "environment.water.<instance>" },
+    { "source": "Outside Temperature", "path": "environment.outside.<instance>" },
+    { "source": "Inside Temperature", "path": "environment.inside.<instance>" },
+    { "source": "Engine Room Temperature", "path": "environment.inside.engineRoom.<instance>" },
+    { "source": "Main Cabin Temperature", "path": "environment.inside.mainCabin.<instance>" },
+    { "source": "Live Well Temperature", "path": "tanks.liveWell.<instance>" },
+    { "source": "Bait Well Temperature", "path": "tanks.baitWell.<instance>" },
+    { "source": "Refrigeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+    { "source": "Refridgeration Temperature", "path": "environment.inside.refrigerator.<instance>" },
+    { "source": "Heating System Temperature", "path": "environment.inside.heating.<instance>" },
+    { "source": "Dew Point Temperature", "path": "environment.outside.dewPoint.<instance>" },
+    { "source": "Apparent Wind Chill Temperature", "path": "environment.outside.apparentWindChill.<instance>" },
+    { "source": "Theoretical Wind Chill Temperature", "path": "environment.outside.theoreticalWindChill.<instance>" },
+    { "source": "Heat Index Temperature", "path": "environment.outside.heatIndex.<instance>" },
+    { "source": "Freezer Temperature", "path": "environment.inside.freezer.<instance>" },
+    { "source": "Exhaust Gas Temperature", "path": "propulsion.exhaust.<instance>" },
+    { "source": ".*", "path": "sensors.temperature.<source>.<instance>" }
+  ]
+}
 
 module.exports = function(app) {
   var plugin = {};
@@ -74,12 +76,12 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
   
-    if (options) {
+    if (Object.keys(options).length == 0) {
+      options = OPTIONS_DEFAULT;
+      app.savePluginOptions(options, () => log.N("using default configuration and saving to disk", false));
+    }
 
-      if (!options.temperatureMapping) {
-        options.temperatureMapping = OPTIONS_TEMPERATUREMAPPING_DEFAULT;
-        app.savePluginOptions(options, () => log.N("saving default configuration to disk", false));
-      }
+    if (options.temperatureMapping) {
 
       var nodes = new Set();
 
@@ -133,6 +135,8 @@ module.exports = function(app) {
           }
         ]
       });
+    } else {
+      log.E("bad or missing configuration");
     }
   }
 
