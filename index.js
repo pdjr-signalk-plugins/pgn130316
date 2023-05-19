@@ -86,6 +86,8 @@ module.exports = function(app) {
 
     if (options.temperatureMapping) {
 
+      log.N("waiting for messages");
+
       var nodes = new Set();
 
       app.emitPropertyValue('pgn-to-signalk', {
