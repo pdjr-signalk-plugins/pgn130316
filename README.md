@@ -83,19 +83,26 @@ The 'temperatureMapping' array property is an ordered list of triples,
 each of which defines the mapping between a 'source' property
 and a Signal K 'path'.
 
-When a PGN 130316 message arrives, its ```Source``` field value will
-be compared sequentially with each 'source' value in
-'temperatureMapping' and a Signal K storage path selected from the
-first match.
+In the general case, when a PGN 130316 message arrives, its
+```Source``` field value will be compared sequentially with each
+'source' value in 'temperatureMapping' and a Signal K storage path
+selected from the first match.
 The 'source' wildcard "*" can be used to match all ```Source``` field
 values.
 
-The optional 'name' property is generally used to introduce some
-arbitrary text that will be embedded in the generated key meta data.
-A parsing curiosity of canboatjs usesrequires that the 'name'
-property of sources 0 through 14 be used as an aid to message
-parsing and these values must not be changed or deleted in the plugin
-configuration.
+Path selection happens a little differently for PGNs with a
+```Source``` field value in the range 0 through 14.
+The meaning of these is defined by the NMEA standard and the
+canboatjs parser used in Signal K converts the numeric ```Source```
+value into its defined name, discarding the numeric value.
+Duh!
+In this case, the plugic compares the textual ```Source``` value
+supplied by canboatjs to the value of the 'name' field in the
+configuration data and so identifies both a Signal K path and the
+original NMEA source code.
+If you want to preserve the default mappings used in Signal K, then
+do not change the 'name' properties for sources 0 through 14 or the
+plugin will not be able to decode these PGNs.
 
 The default configuration file supplied with the plugin preserves as
 far as possible the legacy Signal K path allocations with some
