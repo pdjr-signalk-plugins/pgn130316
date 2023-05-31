@@ -106,7 +106,7 @@ module.exports = function(app) {
                 if (!nodes.has(node)) {
                   nodes.add(node);
                   delta.addMeta(node, {
-                    "description": "Temperature, Extended Range" + (map.name)?(" (" + map.name + ")"):"",
+                    "description": "Temperature, Extended Range" + ((map.name)?(" (" + map.name + ")"):""),
                     "instance": map.instance,
                     "source": map.source,
                     "units": "K"
@@ -129,7 +129,7 @@ module.exports = function(app) {
                 if (!nodes.has(node)) {
                   nodes.add(node);
                   delta.addMeta(node, {
-                    "description": "Temperature, Extended Range" + (map.name)?(" (" + map.name + ")"):"",
+                    "description": "Temperature, Extended Range" + ((map.name)?(" (" + map.name + ")"):""),
                     "instance": map.instance,
                     "source": map.source,
                     "units": "K"

@@ -51,9 +51,13 @@ above by handling PGN 130316 messages in the following way:
 4. 'unit' and 'description' properties are also included in the key
    meta data.
 
-## Plugin configuration
+## Configuration
 
-The plugin includes the following embedded default configuration.
+The plugin includes the following embedded default configuration which
+preserves as far as possible the stock Signal K path allocations with
+some corrections for logical inconsistencies, mostly by acknowledging
+that *all* PGN 130316 messages will include an ```Instance``` field
+value.
 
 ```
 "configuration": {
@@ -103,12 +107,6 @@ original NMEA source code.
 If you want to preserve the default mappings used in Signal K, then
 do not change the 'name' properties for sources 0 through 14 or the
 plugin will not be able to decode these PGNs.
-
-The default configuration file supplied with the plugin preserves as
-far as possible the legacy Signal K path allocations with some
-corrections for logical inconsistencies, especially by acknowledging
-that *all* PGN 130316 messages will include an ```Instance``` field
-value.
 
 The last map in the example configuration shown above illustrates how
 to provide a catch-all.
