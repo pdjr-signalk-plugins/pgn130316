@@ -18,10 +18,9 @@ problematic for the following reasons.
    mapping using the PGN 130316 ```Temperature Source``` field value
    as a key.
 
-   Unfortunately, the mapping lacks comprehensive support for multiple
-   sensor instances raises the possibility of data loss.
-   Inevitably, the system default mapping locations may not be to
-   everyone's taste.
+   This mapping lacks comprehensive support for the NMEA ```Instance```
+   field value which is part of all PGN 130316 messages and, inevitably,
+   these default storage paths may not be to everyone's taste.
 
 2. The PGN 130316 ```Set Temperature``` field is not parsed into Signal K.
 
@@ -88,25 +87,24 @@ each of which defines the mapping between a 'source' property
 and a Signal K 'path'.
 
 In the general case, when a PGN 130316 message arrives, its
-```Source``` field value will be compared sequentially with each
-'source' value in 'temperatureMapping' and a Signal K storage path
-selected from the first match.
-The 'source' wildcard "*" can be used to match all ```Source``` field
-values.
+```Temperature Source``` field value will be compared sequentially
+with each 'source' value in 'temperatureMapping' and a Signal K storage
+path selected from the first match.
+The 'source' wildcard "*" can be used to match all
+```Temperature Source``` field values.
 
 Path selection happens a little differently for PGNs with a
-```Source``` field value in the range 0 through 14.
-The meaning of these is defined by the NMEA standard and the
-canboatjs parser used in Signal K converts the numeric ```Source```
-value into its defined name, discarding the numeric value.
-Duh!
-In this case, the plugic compares the textual ```Source``` value
-supplied by canboatjs to the value of the 'name' field in the
-configuration data and so identifies both a Signal K path and the
-original NMEA source code.
+```Temperature Source``` field value in the range 0 through 14.
+The meaning of these source codes is defined by the NMEA standard and
+the low-level parser used in Signal K converts the numeric value into
+its defined name, discarding the numeric value.
+
+The plugin undoes this mangling by comparing the derived textual value
+to the value of the 'name' field in the configuration data and so
+identifies both a Signal K path and the original NMEA source code.
 If you want to preserve the default mappings used in Signal K, then
 do not change the 'name' properties for sources 0 through 14 or the
-plugin will not be able to decode these PGNs.
+plugin will not be able to decode PGNs with these instance numbers.
 
 The last map in the example configuration shown above illustrates how
 to provide a catch-all.
