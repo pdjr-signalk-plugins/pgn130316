@@ -17,38 +17,41 @@ problematic for the following reasons.
    [this](https://github.com/SignalK/n2k-signalk/blob/master/temperatureMappings.js)
    mapping using the PGN 130316 ```Temperature Source``` field value
    as a key.
+   Inevitably, these default storage paths may not be to everyone's taste.
 
-   This mapping lacks comprehensive support for the NMEA ```Instance```
-   field value which is part of all PGN 130316 messages and, inevitably,
-   these default storage paths may not be to everyone's taste.
+2. The mapping lacks comprehensive support for the NMEA ```Instance```
+   field meaning that for some ```Temperature Source``` values PGN 130316
+   messages from different sensor instances map to the same storage path.
 
-2. The PGN 130316 ```Set Temperature``` field is not parsed into Signal K.
+3. The PGN 130316 ```Set Temperature``` field is not parsed into Signal K.
 
-3. PGN 130316 ```Temperature Source``` and ```Instance``` field data is
+4. PGN 130316 ```Temperature Source``` and ```Instance``` field data is
    not saved to the Signal K store (although both values can be inferred
    by reversing the mapping discussed above).
-   
-4. Meta data describing the created 'temperature' key is not generated.
+
+5. Meta data describing the created 'temperature' key is not generated.
 
 ## Description
 
-**pdjr-skplugin-pgn130316** overcomes most of the limitations described
-above by handling PGN 130316 messages in the following way:
+**pdjr-skplugin-pgn130316** overcomes the limitations described above
+by handling PGN 130316 messages in the following way:
 
 1. A node path is selected from a user-defined mapping supplied in the
-   plugin configuration.
-   Node paths can be parameterised with the ```Temperature Source```
+   plugin configuration allowing PGN 130316 message data to be saved
+   where the user wishes.
+
+2. All storage paths can be parameterised with the ```Temperature Source```
    and ```Instance``` field values derived from the PGN and also with
    a 'name' property value drawn from plugin configuration.
 
-2. The PGN 130316 ```Set Temperature``` field value is parsed into
+3. The PGN 130316 ```Set Temperature``` field value is parsed into
    Signal K.
 
-3. PGN 130316 ```Temperature Source``` and ```Instance``` field values
+4. PGN 130316 ```Temperature Source``` and ```Instance``` field values
    are saved in meta data associated with the generated Signal K keys.
 
-4. 'unit' and 'description' properties are also included in the key
-   meta data.
+5. 'unit' and 'description' properties are included in the key meta
+   data.
 
 ## Configuration
 
@@ -99,12 +102,12 @@ The meaning of these source codes is defined by the NMEA standard and
 the low-level parser used in Signal K converts the numeric value into
 its defined name, discarding the numeric value.
 
-The plugin undoes this mangling by comparing the derived textual value
-to the value of the 'name' field in the configuration data and so
-identifies both a Signal K path and the original NMEA source code.
+The plugin undoes this mangling by comparing the defined name
+supplied by Signal K with the 'name' field in the configuration data
+and so identifies both a Signal K path and the original NMEA
+```Temperature Sourece``` field value.
 If you want to preserve the default mappings used in Signal K, then
-do not change the 'name' properties for sources 0 through 14 or the
-plugin will not be able to decode PGNs with these instance numbers.
+do not change the 'name' properties for sources 0 through 14.
 
 The last map in the example configuration shown above illustrates how
 to provide a catch-all.

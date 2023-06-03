@@ -85,7 +85,7 @@ module.exports = function(app) {
   
     if (Object.keys(options).length == 0) {
       options = plugin.schema.default;
-      log.N("using default configuration", false);
+      log.W("using default configuration");
     }
 
     if ((options.temperatureMapping) && (Array.isArray(options.temperatureMapping)) && (options.temperatureMapping.length > 0)) {
