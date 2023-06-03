@@ -1,6 +1,6 @@
 {
   "name": "pdjr-skplugin-pgn130316",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "Map PGN 130316 into Signal K",
   "main": "index.js",
   "signalk-plugin-enabled-by-default": true,
