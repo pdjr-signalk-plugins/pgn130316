@@ -55,6 +55,23 @@ by handling PGN 130316 messages in the following way:
 
 ## Configuration
 
+The plugin configuration has the following properties.
+
+| Property name      | Value type | Value default | Description |
+| :----------------- | :----------| :------------ | :-----------|
+| temperatureMapping | Array      | (see above)   | Collection of *temperatureMap* objects.
+
+The *temperatureMapping* array is an treated as an ordered list.
+
+Each *temperatureMap* object has the following properties.
+
+| Property name      | Value type | Value default | Description |
+| :----------------- | :----------| :------------ | :-----------|
+| source             | String     | (none)        | Integer in the range '0'..'253' or '*'. |
+| path               | String     | (none)        | Signal K path where PGN 130316 data should be stored. |
+| name               | String     | ''            | Identifying text to be used in Signal K meta data. |
+
+
 The plugin includes the following embedded default configuration which
 preserves as far as possible the stock Signal K path allocations with
 some corrections for logical inconsistencies, mostly by acknowledging
@@ -85,16 +102,13 @@ value.
 }                                                              
 ```
 
-The 'temperatureMapping' array property is an ordered list of triples,
-each of which defines the mapping between a 'source' property
-and a Signal K 'path'.
+## Operation
 
-In the general case, when a PGN 130316 message arrives, its
-```Temperature Source``` field value will be compared sequentially
-with each 'source' value in 'temperatureMapping' and a Signal K storage
-path selected from the first match.
-The 'source' wildcard "*" can be used to match all
-```Temperature Source``` field values.
+When a PGN 130316 message arrives, its ```Temperature Source``` field
+value is compared with each *source* value in *temperatureMapping* and
+a Signal K storage *path* and *name* selected from the first match.
+The *source* wildcard '*' can be used to match any
+```Temperature Source``` field value.
 
 Path selection happens a little differently for PGNs with a
 ```Temperature Source``` field value in the range 0 through 14.
@@ -103,16 +117,14 @@ the low-level parser used in Signal K converts the numeric value into
 its defined name, discarding the numeric value.
 
 The plugin undoes this mangling by comparing the defined name
-supplied by Signal K with the 'name' field in the configuration data
+supplied by Signal K with the *name* field in the configuration data
 and so identifies both a Signal K path and the original NMEA
-```Temperature Sourece``` field value.
+```Temperature Source``` field value.
 If you want to preserve the default mappings used in Signal K, then
 do not change the 'name' properties for sources 0 through 14.
 
 The last map in the example configuration shown above illustrates how
 to provide a catch-all.
-
-## Operation
 
 The plugin will start processing PGN 130316 messages as soon as it is
 installed.
