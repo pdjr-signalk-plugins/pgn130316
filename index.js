@@ -90,7 +90,7 @@ module.exports = function(app) {
 
     if ((options.temperatureMapping) && (Array.isArray(options.temperatureMapping)) && (options.temperatureMapping.length > 0)) {
 
-      log.N("started: processing PGN 130316 messages");
+      log.N("processing PGN 130316 messages");
 
       var nodes = new Set();
 
