@@ -41,30 +41,27 @@ const PLUGIN_SCHEMA = {
           }
         },
         "required": [ "source", "path" ]
-      }
+      },
+      "default": [
+        { "source": 0, "path": "environment.water.${instance}", "name": "Sea Temperature" },
+        { "source": 1, "path": "environment.outside.${instance}", "name": "Outside Temperature" },
+        { "source": 2, "path": "environment.inside.${instance}", "name": "Inside Temperature" },
+        { "source": 3, "path": "environment.inside.engineRoom.${instance}", "name": "Engine Room Temperature" },
+        { "source": 4, "path": "environment.inside.mainCabin.${instance}", "name": "Main Cabin Temperature" },
+        { "source": 5, "path": "tanks.liveWell.${instance}", "name": "Live Well Temperature" },
+        { "source": 6, "path": "tanks.baitWell.${instance}", "name": "Bait Well Temperature" },
+        { "source": 7, "path": "environment.inside.refrigerator.${instance}", "name": "Refrigeration Temperature" },
+        { "source": 7, "path": "environment.inside.refrigerator.${instance}", "name": "Refridgeration Temperature" },
+        { "source": 8, "path": "environment.inside.heating.${instance}", "name": "Heating System Temperature" },
+        { "source": 9, "path": "environment.outside.dewPoint.${instance}", "name": "Dew Point Temperature" },
+        { "source": 10, "path": "environment.outside.apparentWindChill.${instance}", "name": "Apparent Wind Chill Temperature" },
+        { "source": 11, "path": "environment.outside.theoreticalWindChill.${instance}", "name": "Theoretical Wind Chill Temperature" },
+        { "source": 12, "path": "environment.outside.heatIndex.${instance}", "name": "Heat Index Temperature" },
+        { "source": 13, "path": "environment.inside.freezer.${instance}", "name": "Freezer Temperature" },
+        { "source": 14, "path": "propulsion.exhaust.${instance}", "name": "Exhaust Gas Temperature" },
+        { "source": "*", "path": "sensors.temperature.${source}.${instance}" }  
+      ]
     }
-  },
-  "required": [ "temperatureMapping" ],
-  "default": {
-    "temperatureMapping": [
-      { "source": 0, "path": "environment.water.${instance}", "name": "Sea Temperature" },
-      { "source": 1, "path": "environment.outside.${instance}", "name": "Outside Temperature" },
-      { "source": 2, "path": "environment.inside.${instance}", "name": "Inside Temperature" },
-      { "source": 3, "path": "environment.inside.engineRoom.${instance}", "name": "Engine Room Temperature" },
-      { "source": 4, "path": "environment.inside.mainCabin.${instance}", "name": "Main Cabin Temperature" },
-      { "source": 5, "path": "tanks.liveWell.${instance}", "name": "Live Well Temperature" },
-      { "source": 6, "path": "tanks.baitWell.${instance}", "name": "Bait Well Temperature" },
-      { "source": 7, "path": "environment.inside.refrigerator.${instance}", "name": "Refrigeration Temperature" },
-      { "source": 7, "path": "environment.inside.refrigerator.${instance}", "name": "Refridgeration Temperature" },
-      { "source": 8, "path": "environment.inside.heating.${instance}", "name": "Heating System Temperature" },
-      { "source": 9, "path": "environment.outside.dewPoint.${instance}", "name": "Dew Point Temperature" },
-      { "source": 10, "path": "environment.outside.apparentWindChill.${instance}", "name": "Apparent Wind Chill Temperature" },
-      { "source": 11, "path": "environment.outside.theoreticalWindChill.${instance}", "name": "Theoretical Wind Chill Temperature" },
-      { "source": 12, "path": "environment.outside.heatIndex.${instance}", "name": "Heat Index Temperature" },
-      { "source": 13, "path": "environment.inside.freezer.${instance}", "name": "Freezer Temperature" },
-      { "source": 14, "path": "propulsion.exhaust.${instance}", "name": "Exhaust Gas Temperature" },
-      { "source": "*", "path": "sensors.temperature.${source}.${instance}" }
-    ]
   }
 };
 const PLUGIN_UISCHEMA = {};
@@ -83,14 +80,14 @@ module.exports = function(app) {
 
   plugin.start = function(options) {
   
-    if (Object.keys(options).length == 0) {
-      options = plugin.schema.default;
-      log.N("using plugin default configuration", false);
-    }
+    plugin.options = {};
+    plugin.options.temperatureMapping = (options.temperatureMapping)?options.temperatureMapping:plugin.schema.properties.temperatureMapping.default;
 
-    if ((options.temperatureMapping) && (Array.isArray(options.temperatureMapping)) && (options.temperatureMapping.length > 0)) {
+    app.debug(`using configuration: ${JSON.stringify(plugin.options, null, 2)}`);
 
-      log.N("processing PGN 130316 messages");
+    if ((plugin.options.temperatureMapping) && (Array.isArray(plugin.options.temperatureMapping)) && (plugin.options.temperatureMapping.length > 0)) {
+
+      log.N('processing PGN 130316 messages');
 
       var nodes = new Set();
 
@@ -99,7 +96,7 @@ module.exports = function(app) {
           {
             node: function(n2k) {
               var node = undefined;
-              var map = getMap(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+              var map = getMap(plugin.options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
 
               if (map) {
                 node = map.path + '.' + 'temperature';
@@ -122,7 +119,7 @@ module.exports = function(app) {
           {
             node: function(n2k) {
               var node = undefined;
-              var map = getMap(options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
+              var map = getMap(plugin.options.temperatureMapping, '' + n2k.fields['Source'], n2k.fields['Instance']);
 
               if (map) {
                 node = map.path + '.' + 'setTemperature';
