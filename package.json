@@ -23,10 +23,8 @@
   "homepage": "https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316#readme",
   "dependencies": {
     "signalk-libdelta": "github:pdjr-signalk/signalk-libdelta",
-    "signalk-liblog": "github:pdjr-signalk/signalk-liblog",
-    "sprintf-js": "^1.1.2"
+    "signalk-liblog": "github:pdjr-signalk/signalk-liblog"
   },
   "directories": {
-    "lib": "lib"
   }
 }
