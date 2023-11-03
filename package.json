@@ -15,7 +15,7 @@
     "signalk-node-server-plugin",
     "signalk-category-nmea-2000"
   ],
-  "author": "Paul Reeve <preeve@pdjr.eu>",
+  "author": "Paul Reeve <preeve_at_pdjr_dot_eu>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316/issues"
