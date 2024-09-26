@@ -2,10 +2,14 @@
   "name": "pdjr-skplugin-pgn130316",
   "version": "2.1.0",
   "description": "Map PGN 130316 into Signal K",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "signalk-plugin-enabled-by-default": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "publish": "yq -o=json -I=2 resources/openApi.yaml > resources/openApi.json",
+    "test": "echo \"Error: no test specified\"",
+    "build": "tsc",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
@@ -22,9 +26,11 @@
   },
   "homepage": "https://github.com/pdjr-signalk/pdjr-skplugin-pgn130316#readme",
   "dependencies": {
-    "signalk-libdelta": "github:pdjr-signalk/signalk-libdelta",
-    "signalk-liblog": "github:pdjr-signalk/signalk-liblog"
+    "signalk-libdelta": "github:pdjr-signalk/signalk-libdelta"
   },
-  "directories": {
-  }
+  "devDependencies": {
+    "@types/node": "^22.7.2",
+    "typescript": "^5.6.2"
+  },
+  "directories": {}
 }
