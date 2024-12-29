@@ -17,10 +17,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const signalk_libdelta_1 = require("signalk-libdelta");
 const PLUGIN_ID = 'pgn130316';
-const PLUGIN_NAME = 'pdjr-skplugin-pgn130316';
+const PLUGIN_NAME = 'pgn130316';
 const PLUGIN_DESCRIPTION = 'Map PGN 130316 into Signal K';
 const PLUGIN_SCHEMA = {
-    "title": "Configuration for pdjr-skplugin-pgn130316",
+    "title": "Configuration for pgn130316",
     "type": "object",
     "required": ["temperatureMapping"],
     "properties": {

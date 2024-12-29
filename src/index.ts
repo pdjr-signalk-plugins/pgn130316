@@ -17,10 +17,10 @@
 import { Delta } from 'signalk-libdelta'
 
 const PLUGIN_ID: string = 'pgn130316'
-const PLUGIN_NAME: string = 'pdjr-skplugin-pgn130316'
+const PLUGIN_NAME: string = 'pgn130316'
 const PLUGIN_DESCRIPTION: string = 'Map PGN 130316 into Signal K'
 const PLUGIN_SCHEMA: any = {
-  "title": "Configuration for pdjr-skplugin-pgn130316",
+  "title": "Configuration for pgn130316",
   "type": "object",
   "required": [ "temperatureMapping" ],
   "properties": {
