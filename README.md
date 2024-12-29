@@ -1,8 +1,8 @@
-# pdjr-skplugin-pgn130316
+# pgn130316
 
 Map PGN 130316 into Signal K.
 
-**pdjr-skplugin-pgn130316** extends Signal K's NMEA 2000 interface by
+**pgn130316** extends Signal K's NMEA 2000 interface by
 adding enhanced support for PGN 130316 Temperature, Extended Range.
 
 ## Background
